@@ -136,7 +136,7 @@
 
   /* ---------- seat picker ---------- */
   .picker { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
-  @media (max-width: 900px) { .picker { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .picker { grid-template-columns: minmax(0, 1fr); } }
   .map-card { padding: 12px; }
   .map-tools { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 4px 6px 10px; font-size: 13px; }
   .legend { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; color: var(--muted); }
@@ -144,6 +144,14 @@
   .toggle { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; font-size: 13px; color: var(--muted); }
   .toggle input { width: 16px; height: 16px; accent-color: var(--gold); }
   svg.map { width: 100%; height: auto; display: block; touch-action: manipulation; }
+  /* Phones: the whole room squeezed to ~320px makes tables unreadable, so the map keeps a
+     legible width and scrolls sideways inside its card (the page itself never scrolls sideways). */
+  .map-hint { display: none; }
+  @media (max-width: 600px) {
+    .map-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -12px; padding: 0 12px 4px; }
+    .map-scroll svg.map { min-width: 620px; }
+    .map-hint { display: block; font-size: 12px; color: var(--muted); padding: 0 6px 6px; }
+  }
   .tbl { cursor: pointer; }
   .tbl .top { fill: var(--table); stroke: var(--line); stroke-width: 1.5; transition: stroke .15s; }
   .tbl.vip .top { stroke: var(--gold); stroke-width: 2.5; }
@@ -343,7 +351,12 @@ async function poll() {
 // ======================================================================
 function render() {
   const v = VIEWS[S.view];
+  const sc = document.querySelector('.map-scroll');
+  const scrollX = sc ? sc.scrollLeft : 0;
   $app.innerHTML = v ? v() : '';
+  const sc2 = document.querySelector('.map-scroll');
+  // Keep the sideways position across re-renders; on first show, centre the map on the stage.
+  if (sc2) sc2.scrollLeft = sc ? scrollX : (sc2.scrollWidth - sc2.clientWidth) / 2;
   if (S.view === 'find') { const i = document.getElementById('email'); if (i && !S.email) i.focus(); }
 }
 
@@ -466,7 +479,8 @@ const VIEWS = {
           ${g.length > 1 ? `<label class="toggle"><input type="checkbox" data-action="room" ${S.roomOnly ? 'checked' : ''}>
             Only tables with ${g.length} open seats together</label>` : ''}
         </div>
-        ${mapSvg()}
+        <p class="map-hint">Swipe sideways to see the whole room. Tap a table to choose seats.</p>
+        <div class="map-scroll">${mapSvg()}</div>
       </section>
       <aside class="side stack">
         <section class="card">
@@ -668,7 +682,10 @@ $app.addEventListener('keydown', e => {
 });
 
 $app.addEventListener('click', async e => {
-  const seat = e.target.closest('[data-seat]');
+  let seat = e.target.closest('[data-seat]');
+  // On touch screens the room-map seat dots are too small to aim at, so a tap there opens the
+  // table instead of booking a seat. Seats are booked only in the large table view.
+  if (seat && !seat.closest('.detail') && matchMedia('(pointer: coarse), (max-width: 900px)').matches) seat = null;
   if (seat && S.view === 'seats') {
     S.openTable = seat.dataset.seat.replace(/-\d+$/, '');
     return pickSeat(seat.dataset.seat);

@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>SMA Gala Seating</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1f2a44;
+    --navy-2: #2b3a5c;
+    --gold: #c8a96a;
+    --gold-soft: #e6d3a8;
+    --cream: #efe4d2;
+    --blush: #d9a6a1;
+    --sage: #7d8f69;
+    --bg: #f7f2ea;
+    --surface: #ffffff;
+    --ink: #1f2a44;
+    --muted: #5d6578;
+    --line: #e2d8c6;
+    --seat-open: #ffffff;
+    --seat-taken: #9aa1b2;
+    --seat-blocked: #e4ded3;
+    --table: #f4ede1;
+    --danger: #9b3b33;
+    --primary-bg: #1f2a44;
+    --primary-ink: #efe4d2;
+    --mine-ring: #1f2a44;
+    --shadow: 0 1px 2px rgba(31, 42, 68, .06), 0 8px 24px rgba(31, 42, 68, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141b2d; --surface: #1c2540; --ink: #efe4d2; --muted: #b3b8c6; --line: #33405f;
+      --seat-open: #1c2540; --seat-taken: #55607a; --seat-blocked: #2a3350; --table: #24304f;
+      --danger: #e08a80; --primary-bg: #c8a96a; --primary-ink: #1f2a44; --mine-ring: #efe4d2;
+      --shadow: 0 8px 24px rgba(0, 0, 0, .35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141b2d; --surface: #1c2540; --ink: #efe4d2; --muted: #b3b8c6; --line: #33405f;
+    --seat-open: #1c2540; --seat-taken: #55607a; --seat-blocked: #2a3350; --table: #24304f;
+    --danger: #e08a80; --primary-bg: #c8a96a; --primary-ink: #1f2a44; --mine-ring: #efe4d2;
+    --shadow: 0 8px 24px rgba(0, 0, 0, .35);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font: 16px/1.5 "Jost", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, select { font: inherit; color: inherit; }
+
+  /* ---------- hero, modelled on the save-the-date card ---------- */
+  .hero {
+    background: var(--navy); color: var(--cream); text-align: center;
+    padding: 28px 16px 30px; position: relative;
+  }
+  .hero-frame {
+    max-width: 760px; margin: 0 auto; padding: 22px 16px 20px;
+    border: 1px solid rgba(200, 169, 106, .55); outline: 1px solid rgba(200, 169, 106, .3);
+    outline-offset: 5px; border-radius: 180px 180px 6px 6px;
+  }
+  .logo {
+    display: block; width: 84px; height: 84px; margin: 0 auto 12px; border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--navy), 0 0 0 3px var(--gold);
+  }
+  .hero .kicker { font: 500 13px "Jost"; letter-spacing: .28em; text-transform: uppercase; color: var(--gold-soft); }
+  .hero h1 {
+    font: 400 clamp(46px, 9vw, 76px)/1.05 "Pinyon Script", cursive; margin: 6px 0 8px; color: var(--cream);
+  }
+  .hero .when { font: 600 13px "Jost"; letter-spacing: .25em; text-transform: uppercase; }
+  .hero .where { font: 500 15px "Cormorant Garamond", serif; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-top: 4px; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 18px 12px 20px; }
+    .hero-frame { padding: 16px 10px 14px; border-radius: 120px 120px 6px 6px; }
+    .hero .kicker { font-size: 11px; letter-spacing: .16em; }
+    .hero .where { font-size: 13px; letter-spacing: .12em; }
+    .logo { width: 64px; height: 64px; }
+  }
+  .demo-bar {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--gold-soft); color: var(--navy); font-size: 13px; text-align: center; padding: 6px 16px;
+  }
+  .demo-bar button { background: none; border: 0; text-decoration: underline; cursor: pointer; padding: 0 4px; color: var(--navy); }
+
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 64px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 24px; }
+  .narrow { max-width: 560px; margin: 0 auto; }
+  h2 { font: 600 28px/1.2 "Cormorant Garamond", serif; margin: 0 0 6px; }
+  h2, h3, .hero .where { font-variant-numeric: lining-nums; }
+  h3 { font: 600 18px/1.3 "Jost", sans-serif; margin: 0 0 8px; }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--muted); }
+  .fine { font-size: 13px; color: var(--muted); }
+  label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  input[type=email], input[type=text], select {
+    width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 6px;
+    background: var(--bg); min-height: 44px;
+  }
+  input:focus, select:focus, button:focus-visible, [role=button]:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .stack > * + * { margin-top: 14px; }
+  .btn {
+    min-height: 44px; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500;
+    border: 1px solid currentColor; background: transparent; color: var(--ink);
+  }
+  .btn-primary { background: var(--primary-bg); color: var(--primary-ink); border-color: var(--primary-bg); }
+  .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-link { background: none; border: 0; padding: 6px 0; color: var(--muted); text-decoration: underline; cursor: pointer; min-height: 0; }
+  .btn-danger { color: var(--danger); border-color: var(--danger); }
+  .actions { display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap; margin-top: 20px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px;
+    font-size: 13px; border: 1px solid var(--line); background: var(--bg);
+  }
+  .chip.vip { background: var(--navy); color: var(--gold-soft); border-color: var(--gold); }
+  .notice { border-left: 3px solid var(--gold); background: var(--bg); padding: 10px 14px; border-radius: 4px; font-size: 14px; }
+  .error { color: var(--danger); font-size: 14px; min-height: 1.2em; }
+
+  table.summary { width: 100%; border-collapse: collapse; font-size: 15px; }
+  table.summary th { text-align: left; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 6px 8px 6px 0; border-bottom: 1px solid var(--line); }
+  table.summary td { padding: 9px 8px 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+
+  .count-picker { display: flex; gap: 8px; flex-wrap: wrap; }
+  .count-picker button { min-width: 48px; }
+  .count-picker button[aria-pressed=true] { background: var(--primary-bg); color: var(--primary-ink); border-color: var(--primary-bg); }
+  .guest-row { display: grid; grid-template-columns: 1fr 220px; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+  @media (max-width: 600px) { .guest-row { grid-template-columns: 1fr; } }
+
+  /* ---------- seat picker ---------- */
+  .picker { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
+  @media (max-width: 900px) { .picker { grid-template-columns: 1fr; } }
+  .map-card { padding: 12px; }
+  .map-tools { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 4px 6px 10px; font-size: 13px; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; color: var(--muted); }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; vertical-align: -1px; margin-right: 5px; border: 1.5px solid var(--gold); }
+  .toggle { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; font-size: 13px; color: var(--muted); }
+  .toggle input { width: 16px; height: 16px; accent-color: var(--gold); }
+  svg.map { width: 100%; height: auto; display: block; touch-action: manipulation; }
+  .tbl { cursor: pointer; }
+  .tbl .top { fill: var(--table); stroke: var(--line); stroke-width: 1.5; transition: stroke .15s; }
+  .tbl.vip .top { stroke: var(--gold); stroke-width: 2.5; }
+  .tbl:hover .top, .tbl.open-t .top { stroke: var(--navy); stroke-width: 3; }
+  :root[data-theme="dark"] .tbl:hover .top, :root[data-theme="dark"] .tbl.open-t .top { stroke: var(--gold); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tbl:hover .top, :root:not([data-theme="light"]) .tbl.open-t .top { stroke: var(--gold); } }
+  .tbl.dim { opacity: .28; }
+  .tbl text { fill: var(--ink); font-family: "Jost"; pointer-events: none; }
+  .tbl .lbl { font-size: 15px; font-weight: 600; }
+  .tbl .sub { font-size: 10px; fill: var(--muted); }
+  .seat { stroke-width: 1.5; cursor: pointer; }
+  .seat.open { fill: var(--seat-open); stroke: var(--gold); }
+  .seat.taken { fill: var(--seat-taken); stroke: var(--seat-taken); cursor: default; }
+  .seat.mine { fill: var(--gold); stroke: var(--mine-ring); stroke-width: 2; }
+  .seat.blocked { fill: var(--seat-blocked); stroke: var(--seat-blocked); cursor: not-allowed; }
+  .seat-num { font-size: 12px; font-weight: 600; text-anchor: middle; dominant-baseline: central; pointer-events: none; fill: var(--ink); }
+  .seat-num.on-dark { fill: #fff; }
+  .stage rect { fill: var(--primary-bg); }
+  .stage text { fill: var(--primary-ink); font: 600 14px "Jost"; letter-spacing: .3em; }
+  .floor-note { fill: var(--muted); font: 12px "Jost"; }
+
+  .side { position: sticky; top: 12px; }
+  @media (max-width: 900px) { .side { position: static; } }
+  .party { list-style: none; margin: 0 0 14px; padding: 0; }
+  .party li + li { margin-top: 8px; }
+  .party button {
+    width: 100%; text-align: left; display: flex; justify-content: space-between; gap: 10px; align-items: center;
+    padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); cursor: pointer; min-height: 48px;
+  }
+  .party button[aria-pressed=true] { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
+  .party .where { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .party .where.set { color: var(--ink); font-weight: 500; }
+  .detail svg { width: 100%; max-width: 280px; display: block; margin: 0 auto; }
+  .who { list-style: none; padding: 0; margin: 8px 0 0; font-size: 14px; max-height: 220px; overflow: auto; }
+  .who li { display: flex; gap: 8px; padding: 3px 0; border-bottom: 1px dashed var(--line); }
+  .who b { width: 22px; text-align: right; color: var(--muted); font-weight: 500; }
+
+  #toast {
+    position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%) translateY(20px); opacity: 0;
+    background: var(--navy); color: var(--cream); padding: 10px 18px; border-radius: 8px; font-size: 14px;
+    transition: .2s; pointer-events: none; max-width: calc(100% - 32px); z-index: 10; border: 1px solid var(--gold);
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .spinner { text-align: center; padding: 48px 0; color: var(--muted); }
+  footer { text-align: center; font-size: 13px; color: var(--muted); padding: 0 16px 32px; }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+<div id="demoBar" class="demo-bar" hidden>
+  <b>Review prototype. This is not the real gala RSVP.</b> Sample data only; nothing you enter leaves this browser.
+  <button type="button" data-action="demo-reset">Reset demo</button>
+</div>
+<header class="hero">
+  <div class="hero-frame">
+    <!-- Official SMA logo from stellamarisacademy.org (assets/SMA-logo.svg), inlined so Apps Script needs no hosting. -->
+    <img class="logo" alt="Stella Maris Academy" width="84" height="84" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4gPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJiIiB2aWV3Qm94PSIwIDAgNTc4LjEgNTc4LjExIj48ZyBpZD0iYyI+PGNpcmNsZSBjeD0iMjg4Ljc1IiBjeT0iMjg4LjEyIiByPSIyODEuNTciIGZpbGw9IiNmZmYiPjwvY2lyY2xlPjxwYXRoIGQ9Ik0yMDguODksMTc4LjAybC0xLjIxLTEuNGMuNTktLjUxLDEuMTktMSwxLjc5LTEuNDhsMS4xNCwxLjQ1Yy0uNTkuNDYtMS4xNi45NC0xLjczLDEuNDJaTTI1NS40NSwxNzYuMjZjLS44OS0uNTMtMS43OC0xLjAyLTIuNjUtMS40OWwuODctMS42MmMuODkuNDgsMS44Ljk5LDIuNzEsMS41M2wtLjk0LDEuNTlaTTIxMy4wNSwxNzQuODJsLTEuMDQtMS41M2MuODctLjU5LDEuNzYtMS4xNSwyLjY3LTEuNjdsLjkyLDEuNmMtLjg3LjUtMS43MSwxLjAzLTIuNTQsMS41OVpNMjUwLjEsMTczLjQxYy0uOTMtLjQ1LTEuODYtLjg1LTIuNzctMS4yM2wuNzEtMS43MWMuOTQuMzksMS44OS44MSwyLjg1LDEuMjdsLS43OSwxLjY3Wk0yMTguMjUsMTcxLjg0bC0uNzgtMS42N2MuOTUtLjQ0LDEuOTMtLjg1LDIuOTItMS4ybC42MiwxLjc0Yy0uOTQuMzQtMS44Ni43Mi0yLjc2LDEuMTRaTTI0NC41MSwxNzEuMTFjLS45Ny0uMzQtMS45My0uNjQtMi44OC0uODlsLjQ5LTEuNzhjLjk4LjI3LDEuOTguNTgsMi45OS45M2wtLjYsMS43NFpNMjIzLjg3LDE2OS44MmwtLjQ2LTEuNzljMS4wMS0uMjYsMi4wNC0uNDgsMy4xLS42NGwuMjksMS44MmMtLjk5LjE2LTEuOTcuMzYtMi45Mi42MVpNMjM4LjcsMTY5LjUyYy0xLS4yLTEuOTktLjM1LTIuOTctLjQ3bC4yMS0xLjgzYzEuMDIuMTIsMi4wNi4yOCwzLjExLjQ5bC0uMzYsMS44MVpNMjI5Ljc2LDE2OC44OWwtLjExLTEuODRjLjctLjA0LDEuNDEtLjA2LDIuMTMtLjA2bDEuMDIuMDItLjA1LDEuODQtLjk3LS4wMmMtLjY4LDAtMS4zNS4wMi0yLjAyLjA2WiIgZmlsbD0iIzI5MjY2MyI+PC9wYXRoPjxwYXRoIGQ9Ik0yMDkuMTQsMTg1LjIzbC0xLjIyLTEuMzhjLjQyLS4zNy44NS0uNzMsMS4yOC0xLjA5bDEuMTYsMS40M2MtLjQxLjM0LS44Mi42OC0xLjIyLDEuMDRaTTI1NS4yOCwxODMuODNjLS44OS0uNTItMS43OC0xLjAxLTIuNjUtMS40N2wuODYtMS42M2MuOS40NywxLjgxLjk4LDIuNzIsMS41MWwtLjkzLDEuNTlaTTIxMi43NywxODIuMzlsLTEuMDQtMS41MmMuODctLjU5LDEuNzYtMS4xNSwyLjY3LTEuNjdsLjkxLDEuNjFjLS44Ny40OS0xLjcyLDEuMDItMi41NCwxLjU5Wk0yNDkuOTEsMTgxLjAyYy0uOTQtLjQzLTEuODYtLjgzLTIuNzgtMS4ybC42OS0xLjcxYy45NS4zOCwxLjkuNzksMi44NywxLjI0bC0uNzgsMS42N1pNMjE3Ljk3LDE3OS40NGwtLjc2LTEuNjhjLjk1LS40MywxLjkzLS44MiwyLjkzLTEuMTdsLjYsMS43NGMtLjk1LjMzLTEuODcuNy0yLjc4LDEuMTFaTTI0NC4zLDE3OC43N2MtLjk3LS4zMy0xLjk0LS42Mi0yLjg5LS44N2wuNDctMS43OGMuOTkuMjYsMS45OS41NiwzLC45bC0uNTksMS43NVpNMjIzLjYxLDE3Ny40OWwtLjQ0LTEuNzljMS4wMS0uMjUsMi4wNS0uNDUsMy4xLS42MWwuMjcsMS44M2MtMSwuMTUtMS45OC4zNC0yLjkzLjU4Wk0yMzguNDcsMTc3LjI0Yy0xLS4xOS0xLjk5LS4zNC0yLjk3LS40NWwuMi0xLjgzYzEuMDIuMTEsMi4wNi4yNywzLjExLjQ3bC0uMzUsMS44MVpNMjI5LjUyLDE3Ni42MWwtLjExLTEuODRjMS4wMy0uMDYsMi4wOC0uMDcsMy4xNS0uMDRsLS4wNSwxLjg0Yy0xLjAyLS4wMy0yLjAxLS4wMi0yLjk5LjA0WiIgZmlsbD0iIzI5MjY2MyI+PC9wYXRoPjxwYXRoIGQ9Ik0yMDkuNCwxOTIuNDNsLTEuMjQtMS4zN2MuMjUtLjIzLjUxLS40Ni43OC0uNjhsMS4yLDEuNGMtLjI1LjIxLS40OS40My0uNzQuNjVaTTI1NS4xMSwxOTEuNGMtLjg5LS41Mi0xLjc4LTEtMi42Ni0xLjQ1bC44NS0xLjY0Yy45MS40NywxLjgyLjk3LDIuNzQsMS40OWwtLjkyLDEuNlpNMjEyLjUsMTg5Ljk2bC0xLjA2LTEuNTFjLjg3LS42MSwxLjc3LTEuMTcsMi42OC0xLjY4bC45LDEuNjFjLS44OC40OS0xLjcyLDEuMDItMi41MywxLjU5Wk0yNDkuNzIsMTg4LjYyYy0uOTQtLjQyLTEuODctLjgyLTIuNzktMS4xN2wuNjctMS43MmMuOTUuMzcsMS45MS43OCwyLjg4LDEuMjJsLS43NiwxLjY4Wk0yMTcuNywxODcuMDRsLS43NC0xLjY5Yy45NS0uNDIsMS45NC0uOCwyLjk1LTEuMTRsLjU4LDEuNzVjLS45NS4zMi0xLjg4LjY4LTIuNzksMS4wOFpNMjQ0LjA4LDE4Ni40M2MtLjk4LS4zMi0xLjk0LS42LTIuOS0uODRsLjQ2LTEuNzljLjk5LjI1LDIsLjU0LDMuMDEuODdsLS41NywxLjc1Wk0yMjMuMzYsMTg1LjE1bC0uNDItMS44YzEuMDEtLjIzLDIuMDUtLjQyLDMuMS0uNTdsLjI1LDEuODNjLTEsLjE0LTEuOTguMzItMi45NC41NFpNMjM4LjI1LDE4NC45NWMtMS4wMS0uMTgtMi0uMzMtMi45Ny0uNDRsLjItMS44M2MxLjAyLjExLDIuMDYuMjYsMy4xMS40NmwtLjMzLDEuODFaTTIyOS4yOCwxODQuMzNsLS4wOS0xLjg0YzEuMDMtLjA1LDIuMDctLjA2LDMuMTUtLjAzbC0uMDYsMS44NGMtMS4wMi0uMDMtMi4wMi0uMDItMywuMDNaIiBmaWxsPSIjMjkyNjYzIj48L3BhdGg+PHBhdGggZD0iTTIwOS42NiwxOTkuNjRsLTEuMjYtMS4zNS4yOS0uMjcsMS4yNCwxLjM3LS4yNy4yNVpNMjU0LjkzLDE5OC45NmMtLjg5LS41MS0xLjc4LS45OC0yLjY3LTEuNDNsLjgzLTEuNjVjLjkxLjQ2LDEuODMuOTUsMi43NSwxLjQ3bC0uOTEsMS42MVpNMjEyLjI0LDE5Ny41M2wtMS4wOC0xLjVjLjg1LS42MSwxLjc1LTEuMTgsMi42OC0xLjdsLjksMS42MWMtLjg3LjQ5LTEuNzIsMS4wMi0yLjUxLDEuNTlaTTI0OS41MywxOTYuMjRjLS45NC0uNDEtMS44Ny0uOC0yLjgtMS4xNWwuNjUtMS43M2MuOTUuMzYsMS45Mi43NiwyLjg5LDEuMTlsLS43NCwxLjY5Wk0yMTcuNDIsMTk0LjYybC0uNzMtMS43Yy45Ni0uNDEsMS45Ni0uNzgsMi45Ni0xLjFsLjU2LDEuNzZjLS45Ni4zLTEuOS42NS0yLjgsMS4wNFpNMjQzLjg3LDE5NC4xMWMtLjk4LS4zMS0xLjk0LS41OC0yLjktLjgxbC40NC0xLjc5YzEsLjI0LDIsLjUzLDMuMDIuODVsLS41NSwxLjc2Wk0yMjMuMSwxOTIuODFsLS4zOS0xLjhjMS4wMS0uMjIsMi4wNS0uNCwzLjExLS41NGwuMjMsMS44M2MtMS4wMS4xMy0xLjk5LjMtMi45NS41MVpNMjM4LjAyLDE5Mi42NmMtMS4wMS0uMTgtMi0uMzItMi45OC0uNDNsLjItMS44M2MxLjAyLjExLDIuMDYuMjYsMy4xMS40NGwtLjMyLDEuODJaTTIyOS4wNCwxOTIuMDRsLS4wOC0xLjg0YzEuMDMtLjA0LDIuMDgtLjA1LDMuMTUtLjAybC0uMDYsMS44NGMtMS4wMi0uMDMtMi4wMi0uMDMtMywuMDJaIiBmaWxsPSIjMjkyNjYzIj48L3BhdGg+PHBhdGggZD0iTTI1NC43NiwyMDYuNTNjLS44OS0uNS0xLjc5LS45Ny0yLjY4LTEuNDFsLjgyLTEuNjVjLjkyLjQ1LDEuODQuOTQsMi43NiwxLjQ1bC0uOSwxLjYxWk0yMTEuOTksMjA1LjA5bC0xLjEtMS40OGMuODMtLjYyLDEuNzMtMS4yLDIuNjgtMS43M2wuOSwxLjYxYy0uODguNDktMS43MiwxLjAzLTIuNDksMS42Wk0yNDkuMzQsMjAzLjg1Yy0uOTQtLjQtMS44OC0uNzgtMi44MS0xLjEybC42NC0xLjczYy45Ni4zNSwxLjkzLjc0LDIuOSwxLjE1bC0uNzMsMS43Wk0yMTcuMTQsMjAyLjJsLS43MS0xLjdjLjk2LS40LDEuOTYtLjc2LDIuOTgtMS4wN2wuNTMsMS43N2MtLjk2LjI5LTEuOTEuNjMtMi44LDEuMDFaTTI0My42NiwyMDEuNzhjLS45OC0uMy0xLjk1LS41Ni0yLjkxLS43OWwuNDMtMS44YzEsLjI0LDIuMDEuNTEsMy4wMi44MmwtLjUzLDEuNzdaTTIyMi44NSwyMDAuNDZsLS4zOC0xLjgxYzEuMDEtLjIxLDIuMDUtLjM4LDMuMTEtLjVsLjIyLDEuODNjLTEuMDEuMTItMiwuMjgtMi45Ni40OFpNMjM3Ljc5LDIwMC4zOGMtMS4wMS0uMTctMi0uMzEtMi45OS0uNDJsLjItMS44M2MxLjAyLjExLDIuMDYuMjUsMy4xLjQzbC0uMzEsMS44MlpNMjI4Ljc5LDE5OS43NmwtLjA3LTEuODRjMS4wMi0uMDQsMi4wNy0uMDQsMy4xNCwwbC0uMDcsMS44NGMtMS4wMi0uMDQtMi4wMi0uMDQtMy4wMSwwWiIgZmlsbD0iIzI5MjY2MyI+PC9wYXRoPjxwYXRoIGQ9Ik0yNTQuNiwyMTQuMWMtLjktLjQ5LTEuNzktLjk1LTIuNjktMS4zOWwuOC0xLjY2Yy45My40NSwxLjg1LjkyLDIuNzgsMS40M2wtLjg5LDEuNjJaTTIxMS43NSwyMTIuNjZsLTEuMTQtMS40NmMuODEtLjYzLDEuNzEtMS4yMywyLjY4LTEuNzdsLjksMS42MWMtLjg4LjUtMS43MSwxLjA0LTIuNDUsMS42MlpNMjQ5LjE0LDIxMS40N2MtLjk0LS4zOS0xLjg4LS43Ni0yLjgyLTEuMDlsLjYyLTEuNzRjLjk3LjM1LDEuOTQuNzIsMi45MSwxLjEybC0uNzEsMS43Wk0yMTYuODcsMjA5Ljc3bC0uNjktMS43MWMuOTUtLjM5LDEuOTYtLjc0LDMtMS4wM2wuNTEsMS43N2MtLjk3LjI4LTEuOTIuNjEtMi44MS45N1pNMjQzLjQ1LDIwOS40NmMtLjk4LS4yOS0xLjk2LS41NC0yLjkyLS43NmwuNDItMS44YzEsLjIzLDIuMDEuNSwzLjAyLjc5bC0uNTIsMS43N1pNMjIyLjU5LDIwOC4xMWwtLjM1LTEuODFjMS4wMS0uMTksMi4wNS0uMzUsMy4xMi0uNDZsLjIsMS44M2MtMS4wMi4xMS0yLjAxLjI2LTIuOTcuNDRaTTIzNy41NiwyMDguMWMtMS4wMS0uMTctMi0uMzEtMi45OS0uNDFsLjE5LTEuODNjMS4wMi4xMSwyLjA2LjI1LDMuMS40MmwtLjMxLDEuODJaTTIzMS41NiwyMDcuNDhjLTEuMDItLjA0LTIuMDItLjA0LTMuMDEtLjAxbC0uMDYtMS44NGMxLjAzLS4wMywyLjA4LS4wMywzLjE0LjAxbC0uMDcsMS44NFoiIGZpbGw9IiMyOTI2NjMiPjwvcGF0aD48cGF0aCBkPSJNMjU0LjQzLDIyMS42NmMtLjg5LS40OC0xLjgtLjkzLTIuNy0xLjM2bC43OC0xLjY3Yy45NC40NCwxLjg3LjkxLDIuNzksMS40bC0uODcsMS42MlpNMjExLjU0LDIyMC4yMmwtMS4xOC0xLjQyYy43OS0uNjYsMS42OS0xLjI3LDIuNjctMS44M2wuOTEsMS42MWMtLjg5LjUtMS43LDEuMDUtMi40LDEuNjRaTTI0OC45NSwyMTkuMDljLS45NC0uMzgtMS44OS0uNzMtMi44My0xLjA2bC42LTEuNzRjLjk4LjMzLDEuOTUuNywyLjkzLDEuMDlsLS42OSwxLjcxWk0yMTYuNTksMjE3LjMybC0uNjgtMS43MmMuOTUtLjM4LDEuOTctLjcxLDMuMDEtMWwuNDksMS43OGMtLjk4LjI3LTEuOTMuNTgtMi44Mi45M1pNMjQzLjIzLDIxNy4xM2MtLjk4LS4yOC0xLjk2LS41Mi0yLjkzLS43NGwuNC0xLjhjMS4wMS4yMywyLjAyLjQ4LDMuMDMuNzdsLS41LDEuNzhaTTIzNy4zMywyMTUuODJjLTEuMDEtLjE3LTIuMDEtLjMtMy0uNGwuMTktMS44M2MxLjAyLjExLDIuMDYuMjUsMy4xLjQybC0uMywxLjgyWk0yMjIuMzQsMjE1Ljc0bC0uMzItMS44MmMxLjAxLS4xOCwyLjA1LS4zMiwzLjEyLS40MmwuMTcsMS44NGMtMS4wMi4xLTIuMDEuMjMtMi45Ny40Wk0yMzEuMzMsMjE1LjJjLS42Ny0uMDMtMS4zMi0uMDQtMS45Ny0uMDRoLTEuMDRzLS4wNC0xLjgzLS4wNC0xLjgzYzEuMDMtLjAyLDIuMDctLjAxLDMuMTMuMDNsLS4wOCwxLjg0WiIgZmlsbD0iIzI5MjY2MyI+PC9wYXRoPjxwYXRoIGQ9Ik0yNTQuMjYsMjI5LjIzYy0uOS0uNDctMS44LS45Mi0yLjcxLTEuMzNsLjc3LTEuNjhjLjk0LjQzLDEuODguODksMi44MSwxLjM4bC0uODYsMS42M1pNMjExLjM0LDIyNy44bC0xLjI1LTEuMzZjLjc2LS43LDEuNjUtMS4zNCwyLjY1LTEuOTJsLjkyLDEuNmMtLjg5LjUxLTEuNjcsMS4wNy0yLjMyLDEuNjdaTTI0OC43NiwyMjYuNzJjLS45NS0uMzctMS44OS0uNzEtMi44NS0xLjAzbC41OC0xLjc1Yy45OC4zMiwxLjk3LjY4LDIuOTQsMS4wNmwtLjY3LDEuNzJaTTIxNi4zMiwyMjQuODhsLS42Ni0xLjcyYy45NC0uMzYsMS45Ni0uNjgsMy4wMy0uOTZsLjQ2LDEuNzljLTEsLjI2LTEuOTUuNTYtMi44My45Wk0yNDMuMDEsMjI0LjgyYy0uOTgtLjI3LTEuOTYtLjUxLTIuOTQtLjcybC4zOS0xLjhjMS4wMS4yMiwyLjAyLjQ2LDMuMDQuNzRsLS40OCwxLjc4Wk0yMzcuMSwyMjMuNTRjLTEuMDEtLjE2LTIuMDEtLjI5LTMtLjRsLjItMS44M2MxLjAyLjExLDIuMDYuMjQsMy4xLjQxbC0uMjksMS44MlpNMjIyLjA4LDIyMy4zN2wtLjI5LTEuODJjMS0uMTYsMi4wNS0uMjksMy4xMi0uMzhsLjE1LDEuODRjLTEuMDMuMDktMi4wMi4yMS0yLjk4LjM2Wk0yMzEuMDksMjIyLjkyYy0uNzgtLjA0LTEuNTQtLjA1LTIuMjktLjA1aC0uNzJzLS4wMy0xLjg0LS4wMy0xLjg0aC43NmMuNzgsMCwxLjU4LjAxLDIuMzguMDVsLS4wOCwxLjg0WiIgZmlsbD0iIzI5MjY2MyI+PC9wYXRoPjxwYXRoIGQ9Ik0yNTQuMDksMjM2LjhjLS44OS0uNDYtMS44LS45LTIuNzItMS4zbC43NC0xLjY5Yy45Ni40MiwxLjkuODcsMi44MywxLjM1bC0uODUsMS42NFpNMjExLjIsMjM1LjM3bC0xLjM0LTEuMjdjLjcxLS43NSwxLjU5LTEuNDQsMi42Mi0yLjA0bC45NCwxLjU5Yy0uODguNTItMS42MywxLjEtMi4yMiwxLjcyWk0yNDguNTcsMjM0LjM0Yy0uOTUtLjM2LTEuOS0uNjktMi44Ni0xbC41Ni0xLjc2Yy45OS4zMiwxLjk3LjY2LDIuOTUsMS4wM2wtLjY1LDEuNzNaTTI0Mi44LDIzMi41Yy0uOTgtLjI2LTEuOTctLjQ5LTIuOTUtLjY5bC4zOC0xLjgxYzEuMDEuMjEsMi4wMy40NSwzLjA0LjcybC0uNDcsMS43OFpNMjE2LjA1LDIzMi40MmwtLjY0LTEuNzNjLjk0LS4zNSwxLjk3LS42NiwzLjA1LS45MmwuNDMsMS43OWMtMS4wMS4yNC0xLjk2LjUzLTIuODQuODZaTTIzNi44NywyMzEuMjZjLTEuMDEtLjE2LTIuMDEtLjI5LTMtLjM5bC4xOS0xLjgzYzEuMDIuMTEsMi4wNi4yNCwzLjEuNDFsLS4yOSwxLjgyWk0yMjEuODMsMjMxbC0uMjYtMS44M2MxLS4xNSwyLjA1LS4yNiwzLjEyLS4zM2wuMTMsMS44NGMtMS4wMy4wNy0yLjAzLjE4LTIuOTkuMzJaTTIzMC44NSwyMzAuNjNjLS45MS0uMDUtMS44LS4wNy0yLjY5LS4wN2gtLjMzcy0uMDItMS44NC0uMDItMS44NGguMzVjLjkxLDAsMS44NC4wMiwyLjc4LjA3bC0uMDksMS44NFoiIGZpbGw9IiMyOTI2NjMiPjwvcGF0aD48cGF0aCBkPSJNMzczLjQ0LDI3My41M2MtMTcuNzcsMC0zNC42MS02Ljc4LTQ3LjQzLTE5LjA5LS41LS40OC0uNjItMS4yNC0uMjgtMS44NS4zMy0uNjEsMS4wNC0uOTEsMS43Mi0uNzUsNS43MiwxLjQzLDExLjM1LDIuMTUsMTYuNzQsMi4xNSwzMS45NCwwLDUwLjMyLTI0LjI5LDU2Ljg3LTQ3LjAzLDkuMjYtMzIuMTctMi44NC01Ni43Ny0xOC45NC02Ni44OS0uNjItLjM5LS44OC0xLjE1LS42My0xLjgzLjI1LS42OC45Ni0xLjEsMS42Ni0uOTksMzMuNSw0Ljc2LDU4Ljc3LDMzLjksNTguNzcsNjcuOCwwLDM3Ljc2LTMwLjcyLDY4LjQ4LTY4LjQ4LDY4LjQ4Wk0zMzIuNDcsMjU2LjA0YzExLjU5LDkuMzMsMjUuOTMsMTQuNDIsNDAuOTYsMTQuNDIsMzYuMDYsMCw2NS40LTI5LjM0LDY1LjQtNjUuNCwwLTMwLjE0LTIwLjkxLTU2LjM1LTQ5LjYyLTYzLjQ5LDE0LjE3LDEyLjQ0LDIzLjQyLDM2LjI2LDE0Ljc5LDY2LjI1LTEwLjQ2LDM2LjMxLTM3Ljc2LDQ5LjI1LTU5LjgyLDQ5LjI1LTMuODEsMC03LjczLS4zNC0xMS43MS0xLjAzWiIgZmlsbD0iIzI5MjY2MyI+PC9wYXRoPjxwYXRoIGQ9Ik00MTYuNjIsNDMwLjQyYy03Ljc1LDAtMTYuMzYtMi4xLTIwLjk2LTcuMTMtMi43Mi0yLjk3LTUtOC4wNC0xLjcxLTE1Ljg5LTE4LjI5LDUuNS0yNy43OS0yLjg3LTMxLjE1LTYuOTQtNS43NS02Ljk2LTYuODQtMTYuNi0yLjY1LTIzLjQyLDMuNDctNS42Myw5Ljg2LTguMzksMTguMDEtNy45MS0yNi4xNS0xNy44OC00Ny4zMi43My02Ni4xMiwxNy4yNi00LjgyLDQuMjMtOS4zNiw4LjIzLTEzLjg3LDExLjU0LS42OC41LTEuNjQuMzYtMi4xNS0uMzMtLjUtLjY4LS4zNS0xLjY1LjMzLTIuMTUsNC40LTMuMjMsOC45LTcuMTgsMTMuNjYtMTEuMzcsMTkuOC0xNy40MSw0NC40Ni0zOS4wOSw3NC44LTEzLjc1LjU1LjQ1LjcxLDEuMjMuMzksMS44Ni0uMzIuNjMtMS4wMS45OS0xLjcyLjgyLTkuNzYtMi4yMS0xNy4xMi0uMi0yMC43Miw1LjY1LTMuNTIsNS43Mi0yLjUzLDEzLjg4LDIuNCwxOS44NSwzLjE1LDMuODEsMTIuNDgsMTEuOSwzMS4yNiw0LjguNi0uMjMsMS4yOS0uMDYsMS43MS40NC40Mi40OS40OSwxLjIuMTcsMS43Ni0zLjc2LDYuNi0zLjg5LDExLjg5LS4zOCwxNS43MSw2LjIyLDYuOCwyMi41Nyw3LjQ0LDI5LjU1LDQuMjYuNzYtLjM1LDEuNjgtLjAyLDIuMDQuNzYuMzUuNzcuMDIsMS42OC0uNzYsMi4wNC0yLjk5LDEuMzgtNy40MSwyLjE2LTEyLjE0LDIuMTZaIiBmaWxsPSIjMjkyNjYzIj48L3BhdGg+PGNpcmNsZSBjeD0iNDAyLjY1IiBjeT0iNDQyLjQ2IiByPSIxLjg0IiBmaWxsPSIjZmZmIj48L2NpcmNsZT48cGF0aCBkPSJNMjk3LjEyLDQwNC44N2M1LjU3LTMuMDUsNS42OC02LjY1LDEwLjAzLTkuNTQsMS42NC0xLjA5LDIuMTEsMi4yMywxLjczLDNzLTEuMTUsNi44Mi0xLjczLDguMDdjLS41OCwxLjI1LS4zNCw1LjA2LDIuNSwxLjQ0LDMuODQtNC45LDIuODgtMTcuOTcsNy40LTIyLjc4LDIuODgtMy4wNyw4LjU1LTcuNzgsNC43MS0uNTgtMi4xMSwzLjU2LTUuMTQsOS43Ny0uMjksMTcuNDksMy41Niw1LjY3LDguMzYsNS45Niw2LjE1LS45Ni0yLjIxLTMuMDgtNC45LTguMzYtMi41LTExLjE1LDIuNC0yLjc5LDUuNzctNS40Nyw1Ljg2LTkuOC4xLTQuMjMsNS43Ny05LjgsOS42MS0xMC44NiwzLjg0LTEuMDYsNS45OS0uMDgsNC4xMywxLjYzLTEuMjUsMS4xNS00LjksNS44Ni00LjUyLDkuNDIuMzgsMy41NiwyLjc5LDUuNTcsNS45NiwxLjgzLDMuMTctMy43NSw3Ljk4LTExLjA1LDExLjkyLTEyLjQ5LDMuOTQtMS40NCw1LjA1LS43LDIuMTEsMS4yNS0yLjAyLDEuMzUtNS4yOSw2LjM0LTYuMTUsMTEuNTMtLjg3LDUuMTktMi43MSwxMi42LTcuMDIsMTQuOC0xLjczLjg5LTEuNSwzLjU0Ljk2LDMuNTYsNS4xNi4wNCw0LjYxLTQuMjMsNi4zNC0yLjc5LDEuNTQsMi41LDcuMTEsOS44LDEwLjc2LDEwLjk2LTMuOTQuNjctNy44OC0uNjctOC42NSw2LjM0LS4zNywzLjM4LDIuMjEsNy42OSwzLjM2LDMuNDYsMS4xNS00LjIzLDEuNzMtNSwzLjk0LTQuNzEsMi4yMS4yOSwyMS4zMywxLjczLDIzLjkzLDAsMS4zNSw0LjEzLDIuNzcsNy43NywzLjk0LDkuMTMuNTguNjctMS4xNSwxLjgzLTIuMTEsMi42OS0uOTYuODctLjc3LDIuMDIsMS4xNSwxLjczLDEuOTItLjI5LDguNjUsMS40NCw1LjI5LDQuMzItMy4zNiwyLjg4LTIuOTgsNi4wNS0yLjAyLDcuNjkuOTYsMS42MywzLjA4LDIuNzksMi43OS0uMS0uMjktMi44OCwxLjczLTUuNDgsMy41Ni01Ljk2LDEuODMtLjQ4LDE4LjM0LDQuMDIsMjEuNDIuMzgtMzQuMDIsMzEuMTgtNzQuOTEsNDkuOC0xMjQuNDYsNTAuNzlsLS4xMi03OS43OVpNMzAzLjI1LDQxNi4zNGMxLjAxLDAsMS44NC0uODIsMS44NC0xLjg0cy0uODMtMS44NC0xLjg0LTEuODQtMS44NC44Mi0xLjg0LDEuODQuODIsMS44NCwxLjg0LDEuODRaTTMyMS40NSw0MTYuNDNjMS4wMiwwLDEuODQtLjgyLDEuODQtMS44NHMtLjgzLTEuODQtMS44NC0xLjg0LTEuODQuODItMS44NCwxLjg0LjgyLDEuODQsMS44NCwxLjg0Wk0zMzkuNDQsNDA1LjI1YzEuMDIsMCwxLjg0LS44MiwxLjg0LTEuODRzLS44Mi0xLjg0LTEuODQtMS44NC0xLjg0LjgyLTEuODQsMS44NC44MiwxLjg0LDEuODQsMS44NFpNMzYxLjk0LDQyOS4yNGMxLjAyLDAsMS44NC0uODIsMS44NC0xLjg0cy0uODItMS44NC0xLjg0LTEuODQtMS44NC44Mi0xLjg0LDEuODQuODIsMS44NCwxLjg0LDEuODRaTTM4NC40Niw0MjEuNDFjLTUuOTYsMy4yNi02LjMyLDExLjk1LDMuNjksMTEuOTktNC41OC0yLjk0LTQuOTQtNS44NC0zLjY5LTExLjk5WiIgZmlsbD0iIzI5MjY2MyI+PC9wYXRoPjxwYXRoIGQ9Ik0zNjQuMDEsMjIyLjgxbC0xOS45NS0xNC40OS0xOS45NSwxNC40OSw3LjYyLTIzLjQ1LTE5Ljk1LTE0LjQ5aDI0LjY2bDcuNjItMjMuNDUsNy42MiwyMy40NWgyNC42NmwtMTkuOTUsMTQuNDksNy42MiwyMy40NVpNMzQ0LjA2LDIwNC41MmwxNC4xLDEwLjI0LTUuMzgtMTYuNTgsMTQuMS0xMC4yNGgtMTcuNDJsLTUuMzktMTYuNTgtNS4zOSwxNi41OGgtMTcuNDJsMTQuMSwxMC4yNC01LjM5LDE2LjU4LDE0LjEtMTAuMjRaIiBmaWxsPSIjMjkyNjYzIj48L3BhdGg+PHBvbHlnb24gcG9pbnRzPSI0NTguMTcgMzM1Ljk4IDQ2MS4wOSAzNDQuOTYgNDcwLjU0IDM0NC45NiA0NjIuODkgMzUwLjUyIDQ2NS44MSAzNTkuNSA0NTguMTcgMzUzLjk1IDQ1MC41MyAzNTkuNSA0NTMuNDUgMzUwLjUyIDQ0NS44IDM0NC45NiA0NTUuMjUgMzQ0Ljk2IDQ1OC4xNyAzMzUuOTgiIGZpbGw9IiMyOTI2NjMiPjwvcG9seWdvbj48cG9seWdvbiBwb2ludHM9IjQzNS40NyAzMDQuMTQgNDM4LjM4IDMxMy4xMiA0NDcuODMgMzEzLjEyIDQ0MC4xOSAzMTguNjggNDQzLjExIDMyNy42NiA0MzUuNDcgMzIyLjExIDQyNy44MyAzMjcuNjYgNDMwLjc0IDMxOC42OCA0MjMuMSAzMTMuMTIgNDMyLjU1IDMxMy4xMiA0MzUuNDcgMzA0LjE0IiBmaWxsPSIjMjkyNjYzIj48L3BvbHlnb24+PHBvbHlnb24gcG9pbnRzPSI0MTMuNjUgMzQ0LjgyIDQxNi41NyAzNTMuODEgNDI2LjAyIDM1My44MSA0MTguMzcgMzU5LjM2IDQyMS4yOSAzNjguMzQgNDEzLjY1IDM2Mi43OSA0MDYuMDEgMzY4LjM0IDQwOC45MyAzNTkuMzYgNDAxLjI4IDM1My44MSA0MTAuNzMgMzUzLjgxIDQxMy42NSAzNDQuODIiIGZpbGw9IiMyOTI2NjMiPjwvcG9seWdvbj48cG9seWdvbiBwb2ludHM9IjQzNC4yOSAzNzYuNjYgNDM3LjIxIDM4NS42NSA0NDYuNjYgMzg1LjY1IDQzOS4wMSAzOTEuMiA0NDEuOTMgNDAwLjE4IDQzNC4yOSAzOTQuNjMgNDI2LjY1IDQwMC4xOCA0MjkuNTcgMzkxLjIgNDIxLjkyIDM4NS42NSA0MzEuMzcgMzg1LjY1IDQzNC4yOSAzNzYuNjYiIGZpbGw9IiMyOTI2NjMiPjwvcG9seWdvbj48cG9seWdvbiBwb2ludHM9IjM3My41NSAzMDcuNjcgMzc2LjQ3IDMxNi42NiAzODUuOTIgMzE2LjY2IDM3OC4yNyAzMjIuMjIgMzgxLjE5IDMzMS4yIDM3My41NSAzMjUuNjUgMzY1LjkxIDMzMS4yIDM2OC44MyAzMjIuMjIgMzYxLjE5IDMxNi42NiAzNzAuNjMgMzE2LjY2IDM3My41NSAzMDcuNjciIGZpbGw9IiMyOTI2NjMiPjwvcG9seWdvbj48cG9seWdvbiBwb2ludHM9IjMyMi44MyAzMTEuNDggMzI2LjI5IDMyMi4xMSAzMzcuNDggMzIyLjExIDMyOC40MyAzMjguNjkgMzMxLjg5IDMzOS4zMiAzMjIuODMgMzMyLjc1IDMxMy43OSAzMzkuMzIgMzE3LjI0IDMyOC42OSAzMDguMiAzMjIuMTEgMzE5LjM4IDMyMi4xMSAzMjIuODMgMzExLjQ4IiBmaWxsPSIjMjkyNjYzIj48L3BvbHlnb24+PHBhdGggZD0iTTI1OC44MywzODQuNjZjMTIuNjctMTkuNDMsNi41Mi00MS41Ny02LjA2LTUyLjgzLTEwLjM5LTkuMzEtMjguMDItMTMuNDEtNDYuOTgsMS45My0uNzktMi42NS0yLjA5LTUuOTItNC4wOC0xMC4xNmwtMS4zOS0yLjk2LTEuMzksMi45NmMtMS45OSw0LjIzLTMuMjksNy41MS00LjA4LDEwLjE2LTE4Ljk2LTE1LjMzLTM2LjU5LTExLjI0LTQ2Ljk4LTEuOTMtMTIuNTcsMTEuMjYtMTguNzMsMzMuNC02LjA2LDUyLjgzLTMuNTYsMS4xNC02LjE2LDQuNDQtNi4xNiw4LjM5djUuNjFjMCw0Ljg5LDMuOTYsOC44NSw4Ljg1LDguODVoMTExLjYzYzQuODksMCw4Ljg1LTMuOTYsOC44NS04Ljg1di01LjYxYzAtMy45NS0yLjYtNy4yNS02LjE2LTguMzlaTTI1NS40OSwzODQuMmgtMTEuNzRjNi4yOC0xMC4xNCw3Ljg1LTE5LjM4LDYuMzUtMjYuOSwxLjQ0LS45MywzLjExLS45MSw0LjMzLS42NSwzLjMzLjcsNi44NywzLjQzLDguMzEsNi4zNy0uMjMsNi45OS0yLjQyLDE0LjI5LTcuMjUsMjEuMThaTTE5My43MywzNjYuODVjLTEzLjM1LTEwLjIzLTIxLjE2LTUuNzUtMjMuMzMtNC4wMy00LjQ4LDMuNTYtNS42NCwxMC4xMi0yLjc2LDE1LjZsMS41MiwyLjg5LDEuMjYtMy4wMWMxLjkxLTQuNTUsNC42NC03LjA4LDguMTItNy41MSw2LS43NCwxMy4wMyw0LjY0LDE1LjU5LDcuODEuMjcsMi4xNy42NCw0LjA4LDEuMTQsNS41OWgtMzQuNzdjLTEyLjg1LTE5LjMyLTcuMTYtMzMuNDcsMS42NC0zOS43Myw5LjExLTYuNDcsMjMuNTItNi4xNCwzMy43Niw2Ljc2LTEuMjIsNC4yMS0xLjk2LDkuOTMtMi4xNywxNS42M1pNMTkzLjc0LDM3My44NmMtMy45LTMuMzUtOS45OS02Ljg0LTE1LjU5LTYuMTEtMy42NC40Ni02LjYxLDIuNS04Ljg3LDYuMDctLjU2LTMuMjkuNTMtNi41OSwzLjAzLTguNTgsNC43OC0zLjc5LDEyLjczLTEuNywyMS4zNSw1LjUzLDAsMS4wNS4wMywyLjA4LjA4LDMuMDlaTTIwMC4zMywzNDguMjhjMy42LDQuOCw0Ljk3LDI4Ljk4LDEuNzksMzUuODVsLjEyLjA2aC0zLjgybC4xMi0uMDZjLTMuMTktNi44Ny0xLjgxLTMxLjA1LDEuNzktMzUuODVaTTIyMi4xMiwzNzAuOGMzLjQ4LjQ0LDYuMjEsMi45Nyw4LjEyLDcuNTFsMS4yNiwzLjAxLDEuNTItMi44OWMyLjg4LTUuNDgsMS43Mi0xMi4wNS0yLjc2LTE1LjYtMi4xNy0xLjcyLTkuOTgtNi4yLTIzLjMzLDQuMDMtLjIxLTUuNy0uOTUtMTEuNDItMi4xNy0xNS42MywxMC4yNC0xMi45LDI0LjY1LTEzLjI0LDMzLjc2LTYuNzYsOC43OSw2LjI1LDE0LjQ5LDIwLjQxLDEuNjQsMzkuNzNoLTM0Ljc3Yy41LTEuNS44OC0zLjQyLDEuMTQtNS41OSwyLjU2LTMuMTcsOS41OS04LjU3LDE1LjU5LTcuODFaTTIwNi45MSwzNzMuODVjLjA1LTEuMDEuMDctMi4wNC4wOC0zLjA4LDguNjEtNy4yMywxNi41Ny05LjMzLDIxLjM1LTUuNTMsMi41LDEuOTksMy41OSw1LjI5LDMuMDMsOC41OC0yLjI1LTMuNTctNS4yMy01LjYxLTguODctNi4wNy01LjYxLS43Mi0xMS43LDIuNzUtMTUuNTksNi4xMVpNMjU2LjkyLDM0MS41NGMyLjk1LDQuNjksNC45NCwxMC4yNCw1LjU5LDE2LjE2LTIuMS0xLjk4LTQuNzktMy41MS03LjQ0LTQuMDctMi4xNS0uNDUtNC4xLS4yNS01Ljc3LjU1LTEuNy01LjExLTQuODktOS4yNi04LjktMTIuMTQuNDQtLjI5LDEuMS0uNjIsMi4wOS0uOTUsNC4wNS0xLjMzLDEwLjY0LTEuNTEsMTQuNDQuNDVaTTIzOS4yOCwzMjcuNzVjNC40MiwxLjI4LDguMzEsMy41NSwxMS40NCw2LjM2LDEuMTEuOTksMi4xNCwyLjEsMy4xMiwzLjI2LTQuMTktLjc1LTguOTYtLjMyLTEyLjM0Ljc5LTEuNzguNTgtMy4wNiwxLjMyLTMuODgsMi4xOC00LjctMi40OS0xMC4zOC0zLjU4LTE2LjE3LTIuNzEsMi0zLjYxLDkuMzktOC4yNiwxNy44Mi05Ljg5Wk0yMDYuNTcsMzM3LjA5YzkuMDctNy43MiwxNy44LTEwLjYxLDI1LjQ3LTEwLjQ0LTcuMTQsMi43My0xMy4zMyw3LjI5LTE0LjEyLDExLjgtNS4wNywxLjQ3LTEwLjA3LDQuNDktMTQuNCw5LjQxLS4yMi0uNDctLjQ1LS45Mi0uNy0xLjI5LjAxLDAsLjAyLS4wMi4wMy0uMDMsMi43LTIuNjUsNC40MS00Ljc0LDMuNzEtOS40NlpNMjAwLjMzLDMyNy45NmM1LjE1LDExLjcsMy40OCwxMy4zNS4zNywxNi40LS4xMi4xMi0uMjQuMjQtLjM3LjM3LS4xMy0uMTMtLjI1LS4yNS0uMzctLjM3LTMuMTEtMy4wNS00Ljc4LTQuNy4zNy0xNi40Wk0xOTQuMDksMzM3LjA5Yy0uNyw0LjcxLDEuMDIsNi44MSwzLjcxLDkuNDYuMDEuMDEuMDIuMDIuMDMuMDMtLjI1LjM3LS40Ny44Mi0uNywxLjI5LTQuMzMtNC45My05LjMzLTcuOTQtMTQuNC05LjQxLS43OS00LjUyLTYuOTctOS4wOC0xNC4xMi0xMS44LDcuNjYtLjE3LDE2LjQsMi43MSwyNS40NywxMC40M1pNMTQ5LjkzLDMzNC4xMWMzLjE0LTIuODEsNy4wMi01LjA4LDExLjQzLTYuMzUsOC40MywxLjYzLDE1LjgyLDYuMjcsMTcuODMsOS44OS01Ljc5LS44Ny0xMS40OC4yMS0xNi4xNywyLjctLjg0LS44OS0yLjE3LTEuNjQtNC4wMi0yLjIzLTMuMzctMS4wOC04LjA4LTEuNDctMTIuMi0uNzQuOTktMS4xNywyLjAyLTIuMjgsMy4xMy0zLjI3Wk0xNDMuNzMsMzQxLjU1YzMuNzUtMS45MywxMC4yNy0xLjc5LDE0LjM0LS41LDEuMDUuMzMsMS43NC42OCwyLjIuOTktNC4wMiwyLjg5LTcuMiw3LjAzLTguOSwxMi4xNC0xLjY4LS44LTMuNjUtMS01LjgyLS41NC0yLjY0LjU3LTUuMzEsMi4wOS03LjQsNC4wNi42NC01LjkyLDIuNjQtMTEuNDcsNS41OC0xNi4xNlpNMTQ2LjIsMzU2LjY1YzEuMjMtLjI2LDIuOTEtLjI5LDQuMzYuNjUtMS41MSw3LjUyLjA3LDE2Ljc1LDYuMzUsMjYuOWgtMTEuNzRjLTQuODItNi44OS03LjAyLTE0LjE4LTcuMjUtMjEuMTcsMS40MS0yLjg5LDQuOTktNS42Nyw4LjI4LTYuMzhaTTIxNi45MSw0MDAuODNjLTIuNzIsMC00LjkyLTIuMi00LjkyLTQuOTFzMi4yLTQuOTEsNC45Mi00LjkxLDQuOTEsMi4yLDQuOTEsNC45MS0yLjIsNC45MS00LjkxLDQuOTFaTTIzMy41Nyw0MDAuODNjLTIuNzEsMC00LjkyLTIuMi00LjkyLTQuOTFzMi4yLTQuOTEsNC45Mi00LjkxLDQuOTEsMi4yLDQuOTEsNC45MS0yLjIsNC45MS00LjkxLDQuOTFaTTI1MC4yMyw0MDAuODNjLTIuNzEsMC00LjkyLTIuMi00LjkyLTQuOTFzMi4yLTQuOTEsNC45Mi00LjkxLDQuOTEsMi4yLDQuOTEsNC45MS0yLjIsNC45MS00LjkxLDQuOTFaTTE3OC44NCwzOTUuOTFjMC0yLjcxLDIuMi00LjkxLDQuOTEtNC45MXM0LjkyLDIuMiw0LjkyLDQuOTEtMi4yLDQuOTEtNC45Miw0LjkxLTQuOTEtMi4yLTQuOTEtNC45MVpNMTYyLjE4LDM5NS45MWMwLTIuNzEsMi4yLTQuOTEsNC45MS00LjkxczQuOTIsMi4yLDQuOTIsNC45MS0yLjIsNC45MS00LjkyLDQuOTEtNC45MS0yLjItNC45MS00LjkxWk0xNDUuNTEsMzk1LjkxYzAtMi43MSwyLjItNC45MSw0LjkxLTQuOTFzNC45MiwyLjIsNC45Miw0LjkxLTIuMiw0LjkxLTQuOTIsNC45MS00LjkxLTIuMi00LjkxLTQuOTFaTTIwMC4xNyw0MDUuNjVjLTkuMjMtNy4xOS0zLTE4LjgyLjEyLTE5Ljc4aC4wN2MzLjEyLjk2LDkuMzUsMTIuNTkuMTIsMTkuNzhoLS4zMVoiIGZpbGw9IiMyOTI2NjMiPjwvcGF0aD48cGF0aCBkPSJNMjg5LjA1LDBDMTI5LjQxLDAsMCwxMjkuNDEsMCwyODkuMDVzMTI5LjQxLDI4OS4wNSwyODkuMDUsMjg5LjA1LDI4OS4wNi0xMjkuNDEsMjg5LjA2LTI4OS4wNVM0NDguNjksMCwyODkuMDUsMFpNNDg5Ljk1LDI4NS45NGgtMTk3Ljg4Vjg4LjE2YzEwOC41NiwxLjYxLDE5Ni4yMiw4OS4yNCwxOTcuODgsMTk3Ljc4Wk0yODUuOTIsODguMTZ2MTk3Ljc4SDg4LjE1YzEuNjYtMTA4LjUxLDg5LjI2LTE5Ni4xMiwxOTcuNzctMTk3Ljc4Wk04OC4xNSwyOTIuMDloMTk3Ljc3djE5Ny44NmMtMTA4LjUzLTEuNjctMTk2LjE1LTg5LjMzLTE5Ny43Ny0xOTcuODZaTTI5Mi4wNyw0ODkuOTV2LTE5Ny44NmgxOTcuODhjLTEuNjIsMTA4LjU4LTg5LjI5LDE5Ni4yNi0xOTcuODgsMTk3Ljg2Wk0zOS4zNywzNzUuNzdsLTQuNzEtMS4xNi0uNzgtMS45OSwxNC4xOS01Ljg0Ljk4LDIuNTJjLTMuNTksMi45MS01Ljk0LDUuOTYtNy4wNCw5LjE3LTEuMSwzLjItMS4wOCw2LjI2LjA2LDkuMTcuOTcsMi40OCwyLjQzLDQuMjMsNC4zOSw1LjI2LDEuOTYsMS4wMywzLjg4LDEuMTcsNS43Ni40NCwxLjEyLS40NCwyLjAyLTEuMTQsMi43MS0yLjEyLjY5LS45OCwxLjEtMi4yOCwxLjIyLTMuOTEuMTMtMS42Mi0uMTMtNC4yOS0uNzYtNy45OS0uNzMtNC4zMy0xLjA2LTcuMzktLjk5LTkuMTkuMTMtMi44NS44NS01LjIzLDIuMTUtNy4xNCwxLjMtMS45MSwzLjIzLTMuMzYsNS43OS00LjM2LDMuODItMS41LDcuMzgtMS4zNywxMC42OS4zNywzLjk4LDIuMSw2Ljg4LDUuNDksOC43MSwxMC4xNywxLjY4LDQuMzEsMS43Miw4LjgzLjExLDEzLjU3bDUuMzYsMS42OC44MSwyLjA3LTE1LjMzLDUuOTktLjk2LTIuNDZjNy43OS01Ljg2LDEwLjIzLTEyLjUyLDcuMzEtMTkuOTktMS4yLTMuMDUtMi44My01LjE1LTQuOS02LjMtMi4wNy0xLjE0LTQuMTYtMS4zMS02LjI2LS40OC0xLjQ3LjU4LTIuNTYsMS40My0zLjI3LDIuNTYtLjcsMS4xNC0xLjA2LDIuNi0xLjA2LDQuNDEsMCwuOTkuMywzLjMyLjksNi45OS43OCw0Ljk2LDEuMDEsOC42Mi43LDEwLjk5LS4zMSwyLjM3LTEuMDYsNC4zMS0yLjI2LDUuODMtMS4yLDEuNTItMi45MiwyLjcyLTUuMTUsMy41OS0zLjc2LDEuNDctNy4zMywxLjQxLTEwLjY5LS4xOS0zLjM2LTEuNi01Ljg4LTQuNTItNy41NC04Ljc4LTEuNi00LjA4LTEuNjUtOC4zNy0uMTYtMTIuODdaTTI5LjAzLDM1NWwtNi44Mi0zOC4yMywxNi40NC0zLjk0LjQ4LDIuNjljLTMuNDMsMS4yNi02LjA2LDIuNTgtNy44NywzLjkzLTEuODEsMS4zNi0zLjAyLDIuNzYtMy42Myw0LjItLjYxLDEuNDQtLjc3LDIuOTMtLjUsNC40Ny4xNi44OS40NiwxLjUuOSwxLjg1LjQ0LjM1LDEsLjQ2LDEuNjkuMzRsMzMuODItNi4wM2MuNjUtLjEyLDEuMTUtLjQxLDEuNDktLjg5LjM0LS40OC40Ni0xLC4zNi0xLjU3bC0uODgtNC45NywyLjc1LS40OSw0LjE3LDIzLjM5LTIuNzUuNDktLjg0LTQuNzNjLS4xMy0uNzEtLjQzLTEuMjMtLjkxLTEuNTgtLjQ4LS4zNC0xLjA1LS40NS0xLjcyLS4zM2wtMzMuNjQsNmMtLjc5LjE0LTEuMzMuNDYtMS42My45NS0uMy40OS0uMzcsMS4xOS0uMjEsMi4xLjksNS4wMyw2LjExLDcuNjEsMTUuNjMsNy43NGwuNDYsMi42LTE2Ljc4LDIuMDJaTTIwLjkzLDMwMC40OGwxLjQtMzguNjUsMTUuNTUtLjMxLS4wOSwyLjY0Yy0zLjY4LjQ5LTYuMzUsMS4xNy03Ljk5LDIuMDQtMS42NC44Ny0yLjg5LDIuMDUtMy43NSwzLjUzLS44NiwxLjQ4LTEuMzMsMy40NC0xLjQyLDUuODhsLS4yMiw2LjA2Yy0uMDMuOTQuMTMsMS42My40OCwyLjA2LjM2LjQ0Ljg2LjY2LDEuNTIuNjlsMTUuNC41Ni4wNy0yLjA3Yy4wOS0yLjM4LS41My00LjI1LTEuODQtNS42MS0xLjMxLTEuMzYtMy40OC0yLjIxLTYuNDktMi41NmwuMS0yLjcsMjAuNjUuNzUtLjEsMi43Yy0zLjQzLjA2LTUuODcuNzItNy4zMiwxLjk5LTEuNDUsMS4yNy0yLjIyLDMuMjQtMi4zMiw1LjlsLS4wNiwxLjcxLDE2LjQyLjU5Yy43Mi4wMywxLjI0LS4xNywxLjU1LS41Ny40Ni0uNjIuNzItMS41NC43Ni0yLjc0bC4xOS01LjM0Yy4xMy0zLjY2LS45My02LjY5LTMuMTktOS4xcy01Ljc0LTMuOTctMTAuNDQtNC43MWwuMS0yLjcsMTYuODcsMS4yNy0xLjQ2LDQwLjMxLTIuNzktLjEuMTQtMy45OWMuMDMtLjktLjE3LTEuNTktLjYyLTIuMDgtLjQ0LS40OS0xLjA1LS43NC0xLjgzLS43N2wtMzQuMTUtMS4yM2MtLjcyLS4wMy0xLjI2LjE5LTEuNjIuNjUtLjM2LjQ2LS41NiwxLjMtLjYsMi41MmwtLjEzLDMuNTEtMi43OS0uMVpNMjcuNDMsMjQzLjgybC0yLjcxLS42OCw1LjU0LTIyLjExLDIuNzEuNjgtLjkzLDMuNzNjLS4yNywxLjA3LS4yNSwxLjg2LjA1LDIuMzkuMy41My45MS45MSwxLjgyLDEuMTRsMzIuMDUsOC4wMmMxLjMuMzMsMi4xOC4zMywyLjY0LjAxLjQ2LS4zMi44OC0xLjIzLDEuMjYtMi43NWwxLjU1LTYuMmMuNTgtMi4zMS4wMi00Ljc0LTEuNjctNy4yOS0xLjY5LTIuNTUtNC44Mi00Ljk2LTkuMzYtNy4yNGwuNjYtMi42MiwxNi4yNyw1LjEzLTkuNDksMzcuOS0yLjcxLS42OC45NS0zLjc5Yy4yMS0uODMuMTUtMS41Mi0uMTctMi4wNS0uMzItLjUzLS44Ny0uOS0xLjY1LTEuMWwtMzIuOTUtOC4yNWMtLjgtLjItMS40My0uMTMtMS45LjIyLS40Ny4zNS0uODQsMS4wNS0xLjEsMi4xMmwtLjg1LDMuNDFaTTQyLjM5LDE5MC45bC0yLjUxLTEuMjMsMTAtMjAuNDgsMi41MSwxLjIzLTEuNjksMy40NWMtLjQ4Ljk5LS42MywxLjc4LS40NSwyLjM1LjE4LjU4LjcsMS4wOCwxLjU1LDEuNDlsMjkuNjksMTQuNDljMS4yMS41OSwyLjA3Ljc3LDIuNTguNTYuNTItLjIyLDEuMTItMS4wMywxLjgtMi40M2wyLjgxLTUuNzVjMS4wNC0yLjE0LDEtNC42My0uMTItNy40OC0xLjEzLTIuODQtMy42OC01Ljg1LTcuNjYtOS4wMmwxLjE5LTIuNDMsMTQuODUsOC4zOS0xNy4xNCwzNS4xMS0yLjUxLTEuMjMsMS43MS0zLjUxYy4zOC0uNzcuNDctMS40NS4yNi0yLjA1LS4yLS41OS0uNjYtMS4wNi0xLjM4LTEuNDFsLTMwLjUyLTE0LjljLS43NC0uMzYtMS4zNy0uNDItMS45LS4xOC0uNTMuMjQtMS4wNC44Ni0xLjUyLDEuODVsLTEuNTQsMy4xNlpNNzkuOTcsMTIwLjVsNDEuNTQsMTEuODJjMS4xOC4zMiwyLjEuMzksMi43Ni4yLjY2LS4xOSwxLjI4LS42NCwxLjg2LTEuMzZsMS4wMS0xLjI3LDIuMTgsMS43NC0xMi45OSwxNi4zLTIuMTgtMS43NCwxLjIyLTEuNTNjLjk2LTEuMiwxLjQ5LTIuMTQsMS41OS0yLjgxLjEtLjY3LS4wOC0xLjE3LS41MS0xLjUyLS4zNS0uMjgtLjgyLS41LTEuNDItLjY3bC04LjU3LTIuNDUtMTAuMzcsMTMsMS45NSwzLjU4Yy44MSwxLjQ5LDEuNTEsMi40NywyLjExLDIuOTUsMS4wMi44MSwyLjE0LDEuMDksMy4zOC44NSwxLjIzLS4yNSwyLjM3LTEuMDIsMy40MS0yLjMybC44OC0xLjEsMi4xOCwxLjc0LTEwLjUyLDEzLjItMi4xOC0xLjc0LjYtLjc1Yy42OC0uODUsMS4wMS0xLjgxLjk5LTIuODctLjAzLTEuNTEtLjQyLTIuOTktMS4yLTQuNDJsLTE5LjgtMzYuMTUsMi4xLTIuNjRaTTg1Ljc1LDEzMS4yOWw4LjgsMTYuMTIsOC44My0xMS4wOC0xNy42My01LjA0Wk0xMjIuNDcsNzcuOTRsMTUuMTEtOS41NiwyNC42MSwyMC4wMy03LjYtMzAuOCwxNS41MS05LjgxLDEuNDksMi4zNi0zLjM3LDIuMTNjLS44My41My0xLjMxLDEuMDQtMS40MywxLjU1LS4xMi41LjA1LDEuMTMuNTIsMS44N2wxOC4xNSwyOC42OGMuNDYuNzMuOTUsMS4xMiwxLjQ2LDEuMTcuNzcuMDgsMS41OC0uMTUsMi40NS0uN2wyLjk4LTEuODksMS40OSwyLjM2LTE5LjExLDEyLjA5LTEuNDktMi4zNiwzLjYtMi4yOGMuNjYtLjQyLDEuMDUtLjkyLDEuMTYtMS41MXMtLjA0LTEuMjItLjQ2LTEuODhsLTE5LjQzLTMwLjcxLDEwLjMzLDQyLjcyLTIuMjQsMS40Mi0zNC4zNC0yNy45NiwxNy4zNiwyNy40M2MxLDEuNTcsMi4zMSwyLjU1LDMuOTUsMi45MiwxLjY0LjM4LDMuNDYuMDYsNS40OS0uOTNsMS40OSwyLjM2LTEzLjkzLDguODItMS40OS0yLjM2YzEuNjYtMS4yNiwyLjY0LTIuNzUsMi45My00LjQ1LjI5LTEuNy0uMS0zLjM4LTEuMTYtNS4wNmwtMTUuMzUtMjQuMjZjLS42NS0xLjAzLTEuMjYtMS42LTEuODMtMS43Mi0uNTctLjExLTEuMzYuMTUtMi4zOC43OWwtMi45NywxLjg4LTEuNDktMi4zNlpNMjA5LjE2LDMyLjUzbDI3Ljk4LDMyLjkxYy44LjkyLDEuNTMsMS40OSwyLjE4LDEuNy42Ni4yMSwxLjQyLjE4LDIuMy0uMWwxLjU1LS41Ljg1LDIuNjYtMTkuODYsNi4zMy0uODUtMi42NiwxLjg2LS41OWMxLjQ3LS40NywyLjQzLS45NSwyLjg4LTEuNDUuNDUtLjUuNTktMS4wMi40Mi0xLjU1LS4xMy0uNDItLjQtLjg3LS44MS0xLjM1bC01Ljc2LTYuOC0xNS44NCw1LjA1LS4zNiw0LjA2Yy0uMTYsMS42OS0uMTIsMi45LjExLDMuNjIuMzksMS4yNCwxLjE3LDIuMSwyLjM0LDIuNTgsMS4xNi40OCwyLjU0LjQ3LDQuMTMtLjA0bDEuMzUtLjQzLjg1LDIuNjYtMTYuMDgsNS4xMy0uODUtMi42Ni45Mi0uMjljMS4wMy0uMzMsMS44NC0uOTQsMi40Mi0xLjg0LjgyLTEuMjcsMS4zLTIuNzIsMS40Ni00LjM0bDMuNjItNDEuMDYsMy4yMS0xLjAyWk0yMDcuOTgsNDQuNzFsLTEuNjQsMTguMjksMTMuNDktNC4zLTExLjg2LTEzLjk5Wk0yNDYuNDMsMjQuMDVsMjMuMTEtMS44M2MzLjc1LS4zLDYuODUtLjA1LDkuMjkuNzIsMi40NC43OCw0LjMxLDEuOTYsNS42LDMuNTMsMS4yOSwxLjU3LDIuMDIsMy4zOCwyLjE4LDUuNDEuMjYsMy4yNS0uOTksNi0zLjc1LDguMjQtMi4wOSwxLjcxLTUuNDMsMi45OC0xMCwzLjgsMi4zNC4yLDQuMTcuNjYsNS40OCwxLjQsMS4zMS43MywyLjUxLDEuODgsMy42LDMuNDQsMS40MywyLjA2LDIuNjcsNC41NiwzLjcsNy41MS42NSwxLjksMS4xOSwzLjA4LDEuNjEsMy41NS40Mi40Ny44Ny42OCwxLjM1LjY1LDEuMzItLjEsMS45Ny0xLjkxLDEuOTUtNS40M2wyLjYzLS4yMWMuMDksMy43My0uNTIsNi40NS0xLjg1LDguMTctMS4zMywxLjcyLTMuMzIsMi42OS01Ljk4LDIuOS0xLjkuMTUtMy40NS0uMTItNC42Ni0uOC0xLjIxLS42OS0yLjE3LTEuNzYtMi44OS0zLjIxLS40My0uODMtMS4wOS0yLjgtMS45Ny01LjkzLTEuMDMtMy42NS0xLjg5LTYuMS0yLjU4LTcuMzMtLjY5LTEuMjMtMS41My0yLjEyLTIuNTItMi42Ni0uOTktLjU0LTIuMTctLjc2LTMuNTUtLjY1bC0zLjI2LjI2LDEuMjksMTYuMzJjLjA2LjcyLjMxLDEuMjUuNzYsMS41OS42NC40NSwxLjM2LjY1LDIuMTUuNTlsNC4wMS0uMzIuMjIsMi43OC0yMi40MiwxLjc3LS4yMi0yLjc5LDMuNDctLjI3Yy45LS4wNywxLjU2LS4zNiwxLjk4LS44Ny40Mi0uNS42LTEuMTguNTMtMi4wMWwtMi42NC0zMy4zOGMtLjA3LS45Mi0uMzMtMS41OC0uNzktMS45Ny0uNDUtLjM5LTEuMDctLjU2LTEuODUtLjVsLTMuNzcuMy0uMjItMi43OFpNMjYzLjcsNDIuOWwzLjc0LS4zYzMuMzEtLjI2LDUuODYtMS4zMiw3LjY0LTMuMTcsMS4zMy0xLjQxLDEuODgtMy42NSwxLjY0LTYuNzMtLjIyLTIuODQtMS4xLTQuODUtMi42Mi02LjA1LTEuNTItMS4xOS00LjAzLTEuNjUtNy41Mi0xLjM4LTEuODguMTUtMy4wNC40NC0zLjQ5Ljg5LS40NS40NS0uNjEsMS4zOC0uNSwyLjhsMS4xLDEzLjkyWk0zMDQuNzgsMjEuNzNsMjIuNjUsMi4yOS0uMjgsMi43OC00LjA5LS40MWMtLjg4LS4wOS0xLjUzLjAyLTEuOTcuMzMtLjQzLjMxLS42OC44LS43NSwxLjQ4bC0zLjQ2LDM0LjIxYy0uMDguOC4wNywxLjM5LjQ2LDEuNzcuNDkuNDksMS4yNS43OSwyLjI2Ljg5bDMuNjUuMzctLjI4LDIuNzgtMjIuNjUtMi4yOS4yOC0yLjc4LDMuNDcuMzVjMS4yLjEyLDIuMDYsMCwyLjU5LS4zNC41My0uMzUuODMtLjkxLjkxLTEuNjlsMy40Mi0zMy44MmMuMDgtLjg0LS4wOC0xLjQ4LS40OC0xLjkyLS40MS0uNDQtMS4wOS0uNzEtMi4wNS0uODFsLTMuOTQtLjQuMjgtMi43OFpNMzY3LjcsMzYuNzFsMy43My0zLjEsMi4wNi41Ni0zLjc2LDE0Ljg4LTIuNjEtLjcxYy0uMi00LjYyLTEuMjYtOC4zMi0zLjE4LTExLjExLTEuOTItMi43OS00LjM4LTQuNi03LjQtNS40MS0yLjU3LS43LTQuODUtLjU2LTYuODQuNC0xLjk5Ljk2LTMuMjYsMi40Mi0zLjc4LDQuMzctLjMxLDEuMTYtLjI4LDIuMzEuMDksMy40NC4zOCwxLjE0LDEuMTgsMi4yNCwyLjQxLDMuMzEsMS4yMywxLjA3LDMuNTMsMi40NSw2Ljg4LDQuMTUsMy45MiwxLjk5LDYuNTcsMy41NSw3Ljk3LDQuNjgsMi4yMSwxLjgsMy43LDMuOCw0LjQ2LDUuOTkuNzYsMi4xOS43OCw0LjYuMDYsNy4yNS0xLjA4LDMuOTYtMy4yOSw2Ljc1LTYuNjYsOC4zNy00LjA2LDEuOTUtOC41MSwyLjI2LTEzLjM2Ljk1LTQuNDYtMS4yMS04LjEyLTMuODctMTAuOTYtNy45OGwtNC41NCwzLjMxLTIuMTQtLjU4LDQuMzEtMTUuODgsMi41NS42OWMuMDcsOS43NSwzLjk4LDE1LjY3LDExLjcyLDE3Ljc3LDMuMTcuODYsNS44Mi44LDcuOTctLjE4LDIuMTUtLjk4LDMuNTMtMi41Niw0LjEyLTQuNzQuNDEtMS41My4zOC0yLjkxLS4xMi00LjE1LS40OS0xLjI0LTEuNDYtMi40LTIuOTEtMy40OC0uNzktLjU5LTIuODQtMS43NC02LjE1LTMuNDQtNC40NS0yLjMyLTcuNTMtNC4zMi05LjI0LTUuOTctMS43Mi0xLjY2LTIuODMtMy40Mi0zLjM0LTUuMjktLjUxLTEuODctLjQ1LTMuOTYuMTgtNi4yOCwxLjA2LTMuOSwzLjIzLTYuNzMsNi41MS04LjQ4LDMuMjktMS43NSw3LjEzLTIuMDMsMTEuNTQtLjgzLDQuMjMsMS4xNSw3LjcxLDMuNjYsMTAuNDQsNy41M1pNNDMzLjExLDYyLjM2bC03LjExLDQyLjZjLS4xOSwxLjIxLS4xNSwyLjEzLjExLDIuNzcuMjYuNjQuNzgsMS4yLDEuNTYsMS42OWwxLjM3Ljg3LTEuNDksMi4zNi0xNy42NC0xMS4wOSwxLjQ5LTIuMzYsMS42NSwxLjA0YzEuMzEuODIsMi4yOSwxLjI0LDIuOTcsMS4yNi42Ny4wMiwxLjE2LS4yMSwxLjQ2LS42OC4yMy0uMzcuNC0uODcuNTEtMS40OWwxLjQ4LTguNzktMTQuMDgtOC44NS0zLjMzLDIuMzRjLTEuMzkuOTctMi4yOSwxLjc3LTIuNjksMi40Mi0uNjksMS4xLS44NSwyLjI1LS40NywzLjQ1LjM4LDEuMiwxLjI4LDIuMjQsMi42OSwzLjEzbDEuMi43NS0xLjQ4LDIuMzYtMTQuMjktOC45OCwxLjQ5LTIuMzYuODIuNTFjLjkyLjU4LDEuOTEuOCwyLjk3LjY2LDEuNS0uMTksMi45Mi0uNzUsNC4yNi0xLjY4bDMzLjcyLTIzLjcxLDIuODUsMS43OVpNNDIzLjA0LDY5LjMxbC0xNS4wMywxMC41NCwxMS45OSw3LjU0LDMuMDQtMTguMDhaTTQ4MS44NSwxMDguMDdsNC41NS0xLjc1LDEuNjEsMS41NC0xMS43OCwxMy4zOC0yLTEuOTFjMi45Mi00LjMsNC4zOC04LjE3LDQuMzgtMTEuNjEsMC0zLjQ0LTEuMTEtNi4yMi0zLjMyLTguMzQtMi40My0yLjMyLTUuNTUtMy4xLTkuMzUtMi4zMS0zLjguNzktOC4wOSwzLjY4LTEyLjg3LDguNjYtNS4wNSw1LjI4LTcuOTMsMTAuMDMtOC42MywxNC4yNi0uNTIsMy4zNS41OSw2LjM0LDMuMzIsOC45NSwyLjczLDIuNjIsNS45OSwzLjgxLDkuNzgsMy41OSwyLjc0LS4xNyw1Ljc1LTEuNDMsOS4wMS0zLjc2bDEuOTUsMS44N2MtMy45NywzLjIyLTguMTMsNC43Ny0xMi40OSw0LjY3LTQuMzYtLjEtOC4yNS0xLjc4LTExLjY0LTUuMDQtNC40LTQuMjEtNi41OS05LjI5LTYuNi0xNS4yMywwLTUuOTUsMi4zMi0xMS4zNCw2Ljk1LTE2LjE4LDUuMTUtNS4zOCwxMC45Ny04LjAyLDE3LjQ3LTcuOTUsNS41My4wNywxMC4yNiwxLjk4LDE0LjE4LDUuNzMsMS41NSwxLjQ4LDIuNzUsMy4xLDMuNjEsNC44NS44NiwxLjc1LDEuNDgsMy45NSwxLjg2LDYuNTlaTTUxMi4zOSwxMzkuODdsLTIzLjYyLDM2LjE2Yy0uNjYsMS4wMy0uOTksMS44OS0xLjAxLDIuNTctLjAyLjY5LjIzLDEuNDEuNzUsMi4xOGwuOTEsMS4zNC0yLjMxLDEuNTctMTEuNzEtMTcuMjQsMi4zMS0xLjU3LDEuMSwxLjYxYy44NiwxLjI4LDEuNiwyLjA2LDIuMjEsMi4zNS42MS4yOSwxLjE0LjI4LDEuNjEtLjA0LjM2LS4yNS43Mi0uNjMsMS4wNy0xLjE2bDQuODgtNy40NS05LjM0LTEzLjc2LTMuOTkuOGMtMS42Ni4zMy0yLjgxLjcxLTMuNDQsMS4xNC0xLjA4LjczLTEuNjgsMS43Mi0xLjgxLDIuOTdzLjI3LDIuNTcsMS4yMSwzLjk0bC43OSwxLjE3LTIuMzEsMS41Ny05LjQ4LTEzLjk2LDIuMzEtMS41Ny41NC44Yy42MS45LDEuNDMsMS41LDIuNDUsMS44LDEuNDUuNDIsMi45OC40OCw0LjU4LjE3bDQwLjQtOC4xOCwxLjg5LDIuNzlaTTUwMC4zOCwxNDIuMTlsLTE4LDMuNjIsNy45NiwxMS43MiwxMC4wNS0xNS4zM1pNNTMxLjA0LDE3Mi42NWw4LjQ4LDIyLjM1YzEuNTQsNC4wNiwyLjAzLDcuOTYsMS40NywxMS42OC0uNTYsMy43Mi0yLjEsNy4wNi00LjYyLDEwLjAxLTIuNTIsMi45NS01Ljc4LDUuMTgtOS43Niw2LjY5LTQuMTQsMS41Ny04LjA0LDIuMTQtMTEuNywxLjcxLTMuNjYtLjQzLTctMS44OC0xMC4wMi00LjM2LTMuMDItMi40Ny01LjIxLTUuNTMtNi41OS05LjE2bC04Ljc4LTIzLjE3LDIuNjEtLjk5LDEuMzEsMy40NWMuMzIuODQuNzksMS4zOSwxLjQxLDEuNjUuNjIuMjYsMS4zNC4yMywyLjE3LS4wOGwzMS4yOC0xMS44NmMuODQtLjMyLDEuMzctLjc3LDEuNTktMS4zNy4yMS0uNTkuMTItMS40Mi0uMjktMi40OWwtMS4xNi0zLjA2LDIuNjEtLjk5Wk00OTkuODcsMjA3LjgyYy45NywyLjU2LDIuNDgsNC41OSw0LjUzLDYuMDksMi4wNSwxLjUsNC4zNSwyLjI2LDYuOTMsMi4yOSwyLjU3LjAzLDYuMjEtLjg0LDEwLjkxLTIuNjMsNC45NS0xLjg3LDguNTQtMy44MywxMC43OC01Ljg3LDIuMjQtMi4wNCwzLjU4LTQuMTYsNC4wMi02LjM2LjQ0LTIuMiwwLTUuMDItMS4zLTguNDctLjcyLTEuODktMS4zMi0zLjAxLTEuODItMy4zNy0uNS0uMzYtMS4xNy0uMzgtMi4wMi0uMDZsLTMxLjQ1LDExLjkzYy0uOTQuMzUtMS41NC44LTEuODEsMS4zNC0uMjcuNTQtLjI0LDEuMjMuMDgsMi4wN2wxLjE1LDMuMDNaTTU1MC44MSwyMjkuNjlsNS41MywzOC4yOC0xNS4yNCwzLjA4LS4zOC0yLjYyYzMuNTQtMS4xNCw2LjA0LTIuMjgsNy41LTMuNDQsMS40Ni0xLjE1LDIuNDgtMi41MywzLjA2LTQuMTQuNTctMS42MS42OS0zLjYyLjM0LTYuMDRsLS44Ny02LjAxYy0uMTQtLjkzLS40Mi0xLjU4LS44NC0xLjk0LS40My0uMzYtLjk3LS41LTEuNjItLjRsLTE1LjI1LDIuMi4zLDIuMDVjLjM0LDIuMzYsMS4yOCw0LjA5LDIuODEsNS4xOSwxLjUzLDEuMTEsMy44MiwxLjU2LDYuODQsMS4zN2wuMzgsMi42Ny0yMC40NSwyLjk1LS4zOS0yLjY3YzMuMzYtLjY3LDUuNjQtMS43Niw2Ljg0LTMuMjYsMS4yLTEuNTEsMS42MS0zLjU4LDEuMjMtNi4yMmwtLjI1LTEuNjktMTYuMjYsMi4zNWMtLjcxLjEtMS4xOS4zOC0xLjQzLjg0LS4zNS43LS40MywxLjY0LS4yNiwyLjgzbC43Niw1LjI5Yy41MiwzLjYzLDIuMTEsNi40Miw0Ljc2LDguMzksMi42NSwxLjk2LDYuMzUsMi44OCwxMS4xMSwyLjc2bC4zOCwyLjY4LTE2LjgzLDEuNzYtNS43Ny0zOS45MiwyLjc3LS40LjU3LDMuOTVjLjEzLjg5LjQ1LDEuNTQuOTgsMS45NC41Mi40LDEuMTcuNTQsMS45NC40M2wzMy44Mi00Ljg4Yy43MS0uMSwxLjItLjQxLDEuNDctLjkzLjI3LS41Mi4zMi0xLjM4LjE0LTIuNTlsLS41LTMuNDgsMi43Ny0uNFpNNTU4LjA2LDI4Ny43MWwtMS43OCwxNy44LTMwLjk0LDcuMDUsMjguOTQsMTIuOTktMS44MiwxOC4yNi0yLjc4LS4yOC4zOS0zLjk2Yy4xLS45OC0uMDEtMS42OC0uMzMtMi4wOC0uMzItLjQxLS45Mi0uNjUtMS44LS43NGwtMzMuNzctMy4zN2MtLjg2LS4wOS0xLjQ3LjA1LTEuODIuNDItLjU0LjU1LS44NiwxLjM0LS45NiwyLjM2bC0uMzUsMy41MS0yLjc4LS4yOCwyLjI1LTIyLjUsMi43OC4yOC0uNDIsNC4yNGMtLjA4Ljc3LjA4LDEuMzkuNDgsMS44NC40LjQ1Ljk4LjcxLDEuNzYuNzlsMzYuMTYsMy42MS00MC4wMS0xOC4xOC4yNi0yLjY0LDQzLjE3LTkuODMtMzIuMy0zLjIzYy0xLjg1LS4xOS0zLjQzLjI1LTQuNzMsMS4zMS0xLjMsMS4wNi0yLjE5LDIuNjktMi42NSw0LjlsLTIuNzgtLjI4LDEuNjQtMTYuNDEsMi43OC4yOGMtLjAzLDIuMDkuNTQsMy43NywxLjcsNS4wNSwxLjE2LDEuMjcsMi43MywyLjAxLDQuNywyLjJsMjguNTcsMi44NWMxLjIyLjEyLDIuMDQsMCwyLjQ4LS4zOS40NC0uMzguNzItMS4xNy44NC0yLjM2bC4zNS0zLjUsMi43OC4yOFpNNTQ4LjE5LDM1OS4zNmwtNy41NywyMC43Ny0yLjYyLS45NiwxLjA0LTIuODdjLjM3LTEuMDIuNS0xLjc2LjM5LTIuMjUtLjExLS40OS0uMzctLjgtLjc5LS45Ni0uNDctLjE3LTEuMDctLjItMS43OS0uMDhsLTE4LjE0LDMuMjQsOS45MiwxMC41M2MuODEuODcsMS42NCwxLjQ2LDIuNDksMS43Ny45NC4zNCwxLjguMjgsMi41OS0uMThzMS40Mi0xLjM2LDEuOTEtMi43MWwuNDctMS4yOCwyLjYyLjk2LTUuODksMTYuMTQtMi42Mi0uOTZjLjY0LTEuODguODEtMy41MS41Mi00Ljg5LS4yOS0xLjM5LTEuMDgtMi43Ni0yLjM1LTQuMTJsLTEzLjUxLTE0LjQyLTEzLjEyLTQuNzhjLS43Ny0uMjgtMS40Mi0uMjgtMS45NSwwLS41My4yOS0uOTYuODgtMS4yOSwxLjc4bC0xLjU3LDQuMzItMi42Mi0uOTYsOC4zMy0yMi44NSwyLjYyLjk1LTEuNTYsNC4yOWMtLjM2Ljk4LS40MiwxLjczLS4yLDIuMjYuMjIuNTMuNzMuOTQsMS41MiwxLjIzbDExLjY1LDQuMjUsMjMuNDItNC4xOGMxLjUtLjI2LDIuNjItLjcxLDMuMzctMS4zNS43NC0uNjMsMS4zMy0xLjU1LDEuNzctMi43NmwuMzMtLjksMi42Mi45NlpNMTE1LjY5LDQ1NC40NWMxLjI2LDEuMzEsMS44NiwyLjg3LDEuODIsNC42OC0uMDQsMS44LS43MiwzLjM0LTIuMDMsNC41OS0xLjMsMS4yNC0yLjg1LDEuODUtNC42NSwxLjgxLTEuOC0uMDQtMy4zMi0uNzEtNC41Ni0yLjAxLTEuMjQtMS4zLTEuODQtMi44Ni0xLjc5LTQuNjYuMDUtMS44LjczLTMuMzMsMi4wMy00LjU3LDEuMy0xLjI0LDIuODUtMS44NSw0LjY1LTEuODIsMS43OS4wMywzLjMxLjY5LDQuNTQsMS45OVpNNDYyLjAzLDQ1NC44NmMxLjI2LTEuMzEsMi43OS0xLjk5LDQuNTktMi4wMywxLjgtLjA0LDMuMzYuNTcsNC42NywxLjgzLDEuMywxLjI1LDEuOTcsMi43NywyLjAyLDQuNTcuMDQsMS44LS41NiwzLjM1LTEuOCw0LjY1LTEuMjUsMS4zLTIuNzcsMS45Ni00LjU4LDEuOTktMS44LjAzLTMuMzYtLjU4LTQuNjYtMS44My0xLjMtMS4yNS0xLjk3LTIuNzctMi4wMi00LjU2LS4wNS0xLjc5LjU1LTMuMzQsMS43OC00LjYyWiIgZmlsbD0iIzI5MjY2MyI+PC9wYXRoPjxwYXRoIGQ9Ik0yNjMuMiwxNjYuOGMtMTIuOS04LjQtMjkuNzQtMTUuODEtNTAuMTQtNi4xMi0zLjM4LTUuNTUtMjAuMjEtMTMuMS0yNy4wNi00Ljc0LTE1LjMxLTUuMjUtMjguMjYsMy4wNy00MC4xNCwxMC44NmgtMTAuNDl2ODkuMzdoMTYuOTRjLjg4LDYuMzIsMi4xOSwxMS43OCwzLjMzLDE0Ljc4LDMuNiwwLDUuMS0uOSw2LjktLjMsMS44LjYsMi40MS45LDMuNi4zLDEuMi0uNiwzLjktLjksNS43LDAtLjc0LTMuMjgtMi4wMy04LjY0LTIuOTctMTQuNzhoMTA0Ljgzdi04OS4zN2gtMTAuNVpNMTQ0Ljc5LDI1My4wOWgtNi4zNHYtODMuMjJoNi4zNHY4My4yMlpNMTk5LjYsMTY0LjAxYy0uNDEuNDgtLjc3Ljk0LTEuMDQsMS4zMS4yOC0uMzcuNjMtLjgzLDEuMDQtMS4zMVpNMTk4LjI1LDE2NS44MmMtLjA5LjE3LS4yLjM5LS4zMS42MS4xMS0uMjIuMjItLjQ0LjMxLS42MVpNMTQ3Ljg2LDE2OS4xNmMxMS4yOS03LjQsMjIuODctMTQuNzksMzYuNDktMTAuNTEuMDMtLjA3LjA3LS4xNy4xLS4yNC4yOC0uNjMuNjItMS4xOC45OC0xLjY5LS4zNS41My0uNywxLjA2LS45OCwxLjY5LS43NSwxLjctMS42NSwzLjg1LTIuNjcsNi4zMi0uMTItLjAyLS4yMy0uMDUtLjM1LS4wNmwtLjE4LDEuMzVjLS44MSwxLjk4LTEuNjgsNC4xLTIuNjEsNi4zOS0xLjAxLS4wNC0yLjA2LS4wMy0zLjE0LjA0bC4xMiwxLjg0Yy43OC0uMDUsMS41My0uMDQsMi4yNy0uMDMtMS44Niw0LjU3LTMuODgsOS41NC01Ljk3LDE0LjU0LS42My4xLTEuMjQuMTgtMS44OC4zMmwuMzksMS44Yy4yMi0uMDUuNDMtLjA3LjY1LS4xMS0xLjEzLDIuNjktMi4yOCw1LjM2LTMuNDIsNy45NmwtLjMtMS4wNmMtLjk4LjI4LTEuOTguNi0yLjk5Ljk3bC42MywxLjczYy43Ni0uMjgsMS41Mi0uNTEsMi4yNy0uNzMtNC4wMyw5LjE0LTcuOTgsMTcuMjQtMTEuMDMsMjEuNDUtMy45Myw1LjQxLTUuMDksMTQuMy00LjksMjMuMjQtMS4xNC43My0yLjMsMS41MS0zLjQ4LDIuMzV2LTc3LjU1Wk0xNDcuODYsMjUwLjVjMS4yMi0uOTEsMi40My0xLjcsMy42My0yLjUsMCwuMDguMDEuMTYuMDIuMjQtMS4zLjg3LTIuNTMsMS43OC0zLjY1LDIuN3YtLjQ0Wk0xNjcuODQsMjM5LjgzYzYuNjctMi4wNiwxMi44NS0yLjI3LDE4LjMzLS41MiwxLjE2LjM3LDIuMjQuODEsMy4yNSwxLjMtMS43MS0uNTMtMy41MS0uOTEtNS40LTEuMTQtNS4zNS0uNjUtMTAuOTMtLjAyLTE2LjIzLDEuNDEuMDEtLjM1LjAyLS43LjA0LTEuMDVaTTE1MC4xMSwyNTMuMDljLjUyLS40MiwxLjEyLS44MiwxLjY5LTEuMjMuMDQuNDEuMDkuODIuMTMsMS4yM2gtMS44MlpNMTY4LjQ1LDI1My4wOWMtLjM2LTIuOS0uNjEtNS45MS0uNjctOC45Myw1LjI1LTEuNTIsMTAuNzUtMi4yNiwxNS44OC0xLjY0LDcuNjIuOTIsMTMuNDEsNC40OSwxNy4yNiwxMC41N2gtMzIuNDdaTTIwMS4xMywyNDYuNzZjLTIuOTctNC4yMy03Ljc1LTguMzctMTQuMDItMTAuMzgtNC41Ny0xLjQ2LTEwLjkyLTIuMDktMTkuMDIuMTcuMjItMS45NS41NS0zLjg1LDEuMDMtNS42Ny4wMiwwLC4wNS0uMDEuMDctLjAybC0uMDMtLjEyYy44My0zLjExLDIuMDgtNS45NywzLjg5LTguNDEuMDEtLjAxLjAyLS4wMy4wMy0uMDQuNTgtLjA3LDEuMTYtLjE2LDEuNzMtLjIxbC0uMTUtMS44NGMtLjA2LDAtLjEzLjAyLS4yLjAyLDEuMTUtMS43OSwyLjM0LTMuOSwzLjU1LTYuMjUuODMsMCwxLjY1LjAzLDIuNDQuMDlsLjE0LTEuODRjLS41NC0uMDQtMS4xLS4wNC0xLjY2LS4wNiwxLjk5LTQsNC4wMS04LjU1LDUuOTYtMTMuMi4yMy4wNi40OS4wOS43MS4xNWwuNDgtMS43OGMtLjE1LS4wNC0uMzEtLjA2LS40Ny0uMSwxLjczLTQuMTcsMy40LTguMzYsNC45My0xMi4zbC43MS0xLjRzLS4xLS4wNC0uMTQtLjA2Yy42My0xLjYyLDEuMjQtMy4xOSwxLjgxLTQuNjguNzUuNTEsMS40NCwxLjA1LDIsMS41OGwxLjI2LTEuMzVjLS43Mi0uNjctMS41OC0xLjM0LTIuNTUtMS45OGwtLjA5LjE0YzEuODgtNC44NywzLjM5LTguNzIsNC4zMy0xMC42OSwxLjA3LjkxLDIuMTUsMS44OSwzLjI0LDIuOTZ2NzcuMjVaTTIwMi41OCwxNjguODRsLjA1LS4wNS4wNC4wNWgtLjA5Wk0xOTkuNjIsMTYzLjk5YzIuMDYtMi40LDUuNjQtNS4zNSw5LjUyLTEuMjQtMi4wOSwxLjItNC4yLDIuNTEtNi4zNiw0LjA5LTEuMDYtMS4wMS0yLjEyLTEuOTctMy4xNi0yLjg1Wk0yMDQuMzQsMjUzLjA5YzMuMDItNC43LDcuNTYtNy43NCwxMy41NS04Ljk4LDEyLjgxLTIuNjcsMjkuNzksMy4xNiwzOS45NCw4Ljk4aC01My40OVpNMjYxLjIxLDI1MS41NmMtNy45NC00Ljk1LTIxLjEyLTEwLjI1LTMzLjM2LTExLjA3LDguMTkuMDUsMTkuMTUsMi41OSwzMy4zNiwxMC4xOXYuODhaTTI2MS4yMSwyNDcuMjFjLTIzLjQ5LTEyLjE4LTM4LjQ5LTEwLjgyLTQ2Ljk5LTcuMzgtNC41NiwxLjg0LTcuODMsNC41LTEwLjAyLDcuMnYtNzcuNDRjMjMuNDYtMTcuMzgsNDEuOTYtMTAuMTQsNTcuMDEtLjQxdjc4LjA0Wk0yNzAuNjMsMjUzLjA5aC02LjM0di04My4yMmg2LjM0djgzLjIyWk0xNTguNTcsMTcyLjU0bC0xLjAyLTEuNTNjLjktLjYsMS43OS0xLjE1LDIuNjctMS42NWwuOTIsMS42Yy0uODUuNDgtMS43LDEuMDEtMi41NiwxLjU5Wk0xNTMuNzUsMTc2LjE3bC0xLjE5LTEuNDFjLjgyLS42OSwxLjYzLTEuMzQsMi40NC0xLjk1bDEuMTEsMS40N2MtLjc4LjU5LTEuNTcsMS4yMi0yLjM2LDEuODlaTTE2My44LDE2OS41NmwtLjgtMS42NmMuOTgtLjQ3LDEuOTQtLjg4LDIuODktMS4yNWwuNjYsMS43MmMtLjkxLjM1LTEuODMuNzQtMi43NiwxLjE5Wk0xNzUuMjUsMTY2LjM1bC0uMTUtMS44NGMuODMtLjA3LDEuNjUtLjEsMi40NS0uMWguNzJzLS4wNSwxLjg1LS4wNSwxLjg1aC0uNjhjLS43NSwwLTEuNTIuMDItMi4zLjA5Wk0xNjkuMzksMTY3LjQybC0uNS0xLjc4YzEuMDUtLjMsMi4wNy0uNTQsMy4wOC0uNzJsLjMzLDEuODFjLS45NS4xOC0xLjkyLjQtMi45MS42OFpNMTY2LjI1LDE3NC4zOGwuNjIsMS43NGMtLjkxLjMzLTEuODQuNy0yLjc4LDEuMTJsLS43Ni0xLjY4Yy45OS0uNDQsMS45Ni0uODMsMi45Mi0xLjE4Wk0xNTUuMjMsMTgwLjMxbDEuMDgsMS41Yy0uNzkuNTctMS41OSwxLjE5LTIuNCwxLjg0bC0xLjE2LTEuNDNjLjgzLS42OCwxLjY2LTEuMzEsMi40OC0xLjlaTTE2MC41MiwxNzYuOTZsLjg4LDEuNjJjLS44Ni40Ny0xLjcyLjk3LTIuNiwxLjUzbC0uOTktMS41NmMuOTEtLjU4LDEuODEtMS4xLDIuNy0xLjU5Wk0xNjkuMjcsMTczLjQ2YzEuMDUtLjI3LDIuMDgtLjQ5LDMuMDktLjY1bC4yOSwxLjgyYy0uOTYuMTUtMS45My4zNi0yLjkyLjYybC0uNDctMS43OVpNMTU1LjQ2LDE4Ny44bDEuMDQsMS41MmMtLjgxLjU2LTEuNjIsMS4xNS0yLjQzLDEuNzlsLTEuMTQtMS40NmMuODUtLjY2LDEuNjktMS4yNywyLjUyLTEuODVaTTE2OS42NiwxODEuMjhjMS4wNS0uMjUsMi4wOS0uNDQsMy4xLS41OWwuMjYsMS44M2MtLjk2LjE0LTEuOTQuMzItMi45NC41NmwtLjQzLTEuOFpNMTY2LjYzLDE4Mi4xNGwuNTgsMS43NWMtLjkyLjMxLTEuODYuNjYtMi44MSwxLjA2bC0uNzItMS43Yy45OS0uNDIsMS45OC0uNzksMi45NS0xLjExWk0xOTUuMTgsMTg4LjU3Yy0uNTctLjYtMS4zMy0xLjIzLTIuMjEtMS44NGwxLjA0LTEuNTJjLjk4LjY4LDEuODUsMS40LDIuNTEsMi4wOWwtMS4zNCwxLjI3Wk0xNjAuODMsMTg0LjU4bC44NCwxLjY0Yy0uODcuNDUtMS43NC45My0yLjYzLDEuNDZsLS45NS0xLjU4Yy45Mi0uNTYsMS44My0xLjA2LDIuNzQtMS41M1pNMTU1LjY5LDE5NS4zMWwxLjAxLDEuNTRjLS44Mi41NC0xLjY1LDEuMTEtMi40OCwxLjczbC0xLjEtMS40OGMuODYtLjY0LDEuNzEtMS4yMywyLjU2LTEuNzlaTTE2NywxODkuOTJsLjUzLDEuNzdjLS45My4yOC0xLjg4LjYxLTIuODMuOTlsLS42OC0xLjcyYzEtLjM5LDEuOTktLjc0LDIuOTctMS4wNFpNMTkwLjc3LDE5My4yOGMtLjg0LS40NC0xLjc1LS44NS0yLjcxLTEuMjFsLjY2LTEuNzJjMS4wMi4zOSwyLC44MywyLjksMS4zbC0uODYsMS42M1pNMTk2LjgxLDE5NS41NmwtMS40MywxLjE3Yy0uNS0uNjEtMS4yMi0xLjI3LTIuMS0xLjlsMS4wOC0xLjQ5YzEuMDEuNzMsMS44NCwxLjQ5LDIuNDQsMi4yM1pNMTYxLjE1LDE5Mi4yMWwuOCwxLjY2Yy0uODguNDItMS43Ny44OS0yLjY3LDEuNGwtLjkxLTEuNmMuOTMtLjUzLDEuODYtMS4wMiwyLjc4LTEuNDZaTTE1NS45MywyMDIuODJsLjk3LDEuNTdjLS44My41Mi0xLjY3LDEuMDctMi41MiwxLjY3bC0xLjA2LTEuNTFjLjg3LS42MSwxLjc0LTEuMTksMi42MS0xLjcyWk0xNjEuNDcsMTk5Ljg3bC43NiwxLjY4Yy0uODkuNC0xLjc5Ljg1LTIuNywxLjMzbC0uODctMS42M2MuOTUtLjUxLDEuODktLjk3LDIuODItMS4zOFpNMTkxLjEzLDIwMS4zMWMtLjg0LS40NS0xLjc1LS44Ny0yLjY5LTEuMjNsLjY2LTEuNzJjMS4wMi4zOSwxLjk5Ljg0LDIuOSwxLjMzbC0uODcsMS42MlpNMTk2LjcxLDIwMy4zOGwtMS40NSwxLjE0Yy0uNDItLjU0LS45OS0xLjA5LTEuNjktMS42M2wxLjE0LTEuNDVjLjgxLjYzLDEuNDgsMS4yOCwyLDEuOTRaTTE2MS43OSwyMDcuNTRsLjcxLDEuN2MtLjkxLjM4LTEuODIuOC0yLjc0LDEuMjZsLS44My0xLjY1Yy45Ni0uNDgsMS45MS0uOTEsMi44NS0xLjMxWk0xODUuOTcsMjA3LjE0Yy0uOTMtLjI1LTEuOTEtLjQ2LTIuOTEtLjYzbC4zLTEuODJjMS4wNi4xNywyLjEuNCwzLjA5LjY3bC0uNDgsMS43OFpNMTk1LjA0LDIwOS41NmMuNTQuNDYsMS4wMi45NSwxLjQyLDEuNDRsLTEuNDMsMS4xNmMtLjMzLS40LS43Mi0uOC0xLjE4LTEuMmwxLjItMS40Wk0xOTEuNDYsMjA5LjMzYy0uODEtLjQ2LTEuNzEtLjg4LTIuNjYtMS4yNmwuNjgtMS43MmMxLjAzLjQxLDIuMDEuODcsMi45LDEuMzdsLS45MSwxLjYxWk0xNTYuMTgsMjEwLjMzbC45MiwxLjU5Yy0uODUuNDktMS43MSwxLjAzLTIuNTYsMS41OWwtMS4wMi0xLjU0Yy44OS0uNTksMS43Ny0xLjE0LDIuNjYtMS42NVpNMTk1LjM0LDIxNy43MWMuMzIuMy42LjYxLjg2LjkzbC0xLjQzLDEuMTdjLS4yMS0uMjYtLjQ1LS41MS0uNzEtLjc2bDEuMjctMS4zNFpNMTkxLjc3LDIxNy4zM2MtLjc5LS40Ny0xLjY4LS45MS0yLjYzLTEuM2wuNjktMS43MWMxLjA0LjQyLDIuMDEuOSwyLjg4LDEuNDJsLS45NSwxLjU5Wk0xODYuMzMsMjE1LjFjLS45NC0uMjUtMS45Mi0uNDctMi45MS0uNjNsLjMtMS44MmMxLjA1LjE3LDIuMDkuNCwzLjA5LjY3bC0uNDgsMS43OFpNMTU2LjQzLDIxNy44NmwuODgsMS42MmMtLjg3LjQ3LTEuNzQuOTctMi42MiwxLjUxbC0uOTctMS41N2MuOS0uNTYsMS44MS0xLjA4LDIuNzEtMS41NlpNMTc4LjE2LDIyMS45NWgtLjM1cy0uMDItMS44NC0uMDItMS44NGguMzdjLjk1LDAsMS44OC4wMywyLjc4LjFsLS4xMywxLjg0Yy0uODYtLjA2LTEuNzQtLjA5LTIuNjUtLjA5Wk0xODYuNjksMjIzLjAyYy0uOTMtLjI2LTEuOTEtLjQ3LTIuOTEtLjYzbC4zLTEuODJjMS4wNi4xNywyLjEuNCwzLjEuNjdsLS40OSwxLjc4Wk0xOTIuMDcsMjI1LjMyYy0uNzctLjUtMS42NC0uOTUtMi41OC0xLjM1bC43MS0xLjdjMS4wNC40NCwyLC45NCwyLjg2LDEuNDlsLTEsMS41NVpNMTc1LDIyOC4xNmwuMTUsMS44NGMtLjk4LjA4LTEuOTguMTktMywuMzRsLS4yNy0xLjgzYzEuMDUtLjE1LDIuMDktLjI3LDMuMTEtLjM1Wk0xOTAuNTUsMjMwLjIyYzEuMDQuNDYsMiwxLDIuODQsMS41OWwtMS4wNiwxLjUxYy0uNzQtLjUyLTEuNTktLjk5LTIuNTItMS40MWwuNzUtMS42OVpNMTc4LjU3LDIyOC4wMWMuOTMsMCwxLjgzLjAzLDIuNzEuMDlsLS4xMywxLjg0Yy0uODQtLjA2LTEuNy0uMDktMi41OS0uMDloLS40MXMtLjAyLTEuODQtLjAyLTEuODRoLjQ0Wk0xODQuNDIsMjI4LjQ2YzEuMDguMTgsMi4xMi40LDMuMS42OGwtLjUsMS43OGMtLjkxLS4yNi0xLjg5LS40Ny0yLjktLjY0bC4zLTEuODJaTTE5Ny45NiwxNjAuMjJsLS42LTQuOGMyLjQuNiw1LjQxLDIuMSw1LjQxLDIuMS0xLjguNi00LjgxLDIuNy00LjgxLDIuN1pNMTg2Ljg2LDE2My44MmwuMy02LjksMi43LjYsNC4yLTEuOC4zLDUuMWgtMy42bC0zLjksM1pNMTcxLjI1LDIwMS45M2w1LjExLTExLjcsMi43LjYtNS43LDEyLjMtMi4xLTEuMlpNMTYyLjI0LDIxOS4zNHM0LjItNS43LDUuNzEtOS45Yy41NC0xLjUyLDIuNy0uMywyLjctLjMtLjU5LDMtNS40LDExLjExLTUuNCwxMS4xMWwtMy0uOVpNMTUzLjU0LDIzNi43NGwzLjkuMywzLjYtMi43LDEuOCw5LjMtMy0zLjYtMS44LDQuOC0zLjMtMy42LTEuOCw1LjQuNi05LjlaTTE3OS45NSwxODAuNjJsNC44MS0xMi42LDIuNy4zLTQuOCwxMy44MS0yLjctMS41WiIgZmlsbD0iIzI5MjY2MyI+PC9wYXRoPjxwYXRoIGQ9Ik0xNzUuMSw1MjAuNzhjNC43OSwyLjUzLDUuODUuMSw3Ljg5LTQuMDZsOC4zNy0xNy4xM2MyLjAzLTQuMTYsMy4zLTYuNDktMS42NC04LjcybC44OS0xLjgzYzIuODYsMS40Niw1LjY1LDIuOTUsOC41Miw0LjQxLDYuMjEsMi45NywxMi40OSw1LjkyLDE4LjcsOC44OWwtMy45Niw5LjEyLTIuMTgtMS4wNmMxLjU5LTUuNDQtLjUzLTguNDItNS40LTEwLjgtLjYxLS4zLTMuODUtMS44OS00LjQzLTEuNDctLjI4LjE4LTEuMzcsMi40MS0xLjU2LDIuODFsLTQuNTgsOS4zOGM0LjExLDIuMDEsNy4xMSwyLjUzLDkuNjItMi4wOGwyLjAzLjk5Yy0xLjE5LDIuMzEtMi40Myw0LjU5LTMuNjIsNi45LS45NywyLjExLTEuOTEsNC4yOC0yLjg3LDYuMzlsLTIuMDMtLjk5YzEuMzItNS4xNC4zOS02LjU5LTQuMjctOC44N2wtMi45LDUuOTNjLTIuMzMsNC43Ni0zLjk3LDcuNzMsMi4wMSwxMC42Niw1LjczLDIuOCw4LjgsMi4xNywxMi44Ny0yLjk0bDIuMDMuOTljLS45OSwxLjktMi4wMSwzLjczLTMsNS42My0uNjIsMS4zOS0xLjE2LDIuNzYtMS43OCw0LjE1LTYuOTctMy40Ny0xMy45MS02Ljk5LTIwLjg4LTEwLjQ2LTIuOTEtMS4zNi01LjgtMi42NS04LjcyLTQuMDFsLjg5LTEuODNaIiBmaWxsPSIjZmZmIj48L3BhdGg+PHBhdGggZD0iTTIxMi4xNyw1MzkuNjdsLTIuMTUtLjY5LDIuMDctNy4zOSwyLjE1LjY5Yy40OSwzLjQ3LDEuNzgsNy4wMyw1LjQzLDguMiwyLjA0LjY1LDQuNTIuMzIsNS4yNi0xLjk5Ljc4LTIuNDItMi4xOS00LjA4LTMuNzktNS4xOC0zLjg4LTIuNjctNy4yNC01LjUyLTUuNTctMTAuNzMsMS41OC00Ljk0LDYuMzctNS44NCwxMC43OC00LjQyLDIuNDcuNzksNCwxLjkzLDUuNjgsMy45bDEuNTItMS41OSwyLjE1LjY5LTIuMjYsNy4wNC0yLjE1LS42OWMtLjM2LTIuOTYtMS42Ni01LjkyLTQuNjctNi44OS0xLjYxLS41Mi00LjAyLS40LTQuNjYsMS41OS0uNzYsMi4zNiwxLjY4LDMuNjIsMy4zNCw0Ljc0LDMuOSwyLjc5LDguMDYsNS43Miw2LjMsMTEuMi0xLjc2LDUuNDgtNi45NCw2LjMxLTExLjc4LDQuNzYtMi4zMS0uNzQtNS4wNC0yLjM4LTYuMjgtNC42MmwtMS4zOSwxLjM5WiIgZmlsbD0iI2ZmZiI+PC9wYXRoPjxwYXRoIGQ9Ik0yNDkuMDcsNTI3LjM3bC0yLjkyLDEzLjkyYy0uNDUsMi4xNS0uOTcsNC42NCwxLjAyLDUuMDYsMS4zOC4yOSwyLjcyLS41OSwzLjcxLTEuNDdsMS42MSwxLjY2Yy0yLjM2LDIuNDUtNS40MSwzLjI1LTguNjcsMi41Ni01LjQxLTEuMTQtNS45MS00LjUzLTQuOS05LjMzbDIuOTItMTMuOTItMi45OC0uNjMuMzUtMS42NWM0LjI4LS4zMiw3LjU4LTIuNjIsOS41NC02LjQybDIuMzguNS0xLjU4LDcuNTEsNS41OCwxLjE3LS40NiwyLjIxLTUuNTgtMS4xN1oiIGZpbGw9IiNmZmYiPjwvcGF0aD48cGF0aCBkPSJNMjU3LjMsNTQ2LjQzYy4zMS0yLjUyLDIuNTYtNC4yMyw1LjA4LTMuOTMsMi40Ni4zLDQuMywyLjQ1LDQsNC45Ny0uMzEsMi41Mi0yLjUyLDQuNDEtNS4xLDQuMS0yLjUyLS4zMS00LjI4LTIuNjItMy45OC01LjE0WiIgZmlsbD0iI2ZmZiI+PC9wYXRoPjxwYXRoIGQ9Ik0yOTguNTUsNTIzLjgyYy0uMDgtMS4yNC0uMzMtMi40Ny0uNzYtMi45NS0uOTgtMS4wNy0zLjYyLS44OS00Ljg2LS44MWwtLjEzLTIuMDNjNC4xNC0uNzIsNy43LTEuNTgsMTEuMjgtMy45bDEuMjQtLjA4LDEuOTQsMjkuODVjLjA4LDEuMjkuMjcsNC4xMSwxLjE4LDUuMTMuOTIsMS4xMywzLjI4Ljg2LDQuNTIuODNsLjEzLDIuMDNjLTIuOTkuMTQtNi4yNi4yNC05LjUzLjM5LTIuODEuMjQtNS41Ni41My04LjM4Ljc3bC0uMTMtMi4wM2MxLjA3LS4wNywzLjQ5LS4yMyw0LjIyLTEuMTguODktMS4wOC43Mi0zLjcyLjYzLTUuMDdsLTEuMzYtMjAuOTVaIiBmaWxsPSIjZmZmIj48L3BhdGg+PHBhdGggZD0iTTMyNS41OCw1NDUuNWMtLjM1LTEuNi43OS0zLjI5LDIuMzktMy42MywxLjYtLjM0LDMuMDQuNzMsMy45NCwxLjk4LDEuMTEsMS40NCwxLjg2LDMuMDYsMy45NiwyLjYxLDQuOTEtMS4wNSwyLjcyLTExLjI1LDIuMTMtMTQuODItMS4zMSwxLjk1LTMuNDcsMy4xNy01LjY4LDMuNjQtNi40LDEuMzctMTEuNDgtMi45Ni0xMi44LTkuMTQtMS41MS03LjA2LDIuMjgtMTQuMSw5LjUxLTE1LjY1LDkuNi0yLjA2LDE0LjI4LDcuMTUsMTUuOTcsMTUuMDMsMi4wOSw5Ljc2LjczLDIxLjEzLTEwLjU4LDIzLjU1LTMuMTQuNjctOCwuMzMtOC44NC0zLjU4Wk0zMzUuOTgsNTIyLjIyYy0uNjctMy4xNC0yLjIzLTEwLjQyLTYuNDgtOS41MS00LjMuOTItMi45Miw3LjM3LTIuMjcsMTAuNDEuNjUsMy4wMywxLjk1LDkuNjIsNi4xOSw4LjcxLDEuODctLjQsMy40LTEuODgsMy42NC0zLjcybC0xLjA5LTUuODhaIiBmaWxsPSIjZmZmIj48L3BhdGg+PHBhdGggZD0iTTM3Mi4zLDUyNS42bC45MSwyLjQzYy40NiwxLjIxLDEuNDQsMy44NiwyLjc3LDQuNSwxLjIzLjU2LDMuMzctLjE4LDQuNTctLjUxbC43MSwxLjljLTIuODcsMS4wMi01Ljc3LDEuOTgtOC42NCwzLTIuNzgsMS4xLTUuNTksMi4yOC04LjM4LDMuMzhsLS43MS0xLjljLjkzLS40MSwzLjE4LTEuMzIsMy42NS0yLjMzLjY1LTEuMzMtLjI5LTMuODEtLjc2LTUuMDhsLTEuMDUtMi44LTEzLjE2LDQuOTMtMS4xMS0yLjk2LDguMzItMjcuOTUsMy41OS0xLjM1LDguMTYsMjEuNzcsNS4zOS0yLjAyLDEuMTEsMi45Ni01LjM5LDIuMDJaTTM2NC4yNyw1MjUuMjRsLTUuMDMtMTMuNDItLjExLjA0LTUuMTcsMTcuMjQsMTAuMy0zLjg2WiIgZmlsbD0iI2ZmZiI+PC9wYXRoPjxwYXRoIGQ9Ik0zOTMuMDMsNDg3Ljc1bDEuNDUsMTMuOWMxLjAxLDUuODksMi40MywxMC43OCw0LjYxLDE2LjM0LDEuMTEsMi44LDIuMDgsNi4yLTEuMjIsOC4wMy0yLjIyLDEuMjMtNC4zLjM4LTUuNDgtMS43NC0xLjY0LTIuOTYtMS41Ni0xMS4wNy0xLjUzLTE0LjYzbC4yMi0xNS40MS05LjA3LDUuMDNjLTQuODgsMi43MS01LjE1LDIuOTItMy43NSw4LjU5bC0xLjg3LDEuMDQtNS4wMy0xNS41OSwxLjgyLTEuMDEuMDUuMWMuMTguNTUuMzksMS40LjY0LDEuODQuNjUsMS4xOCwxLjU5LjY2LDIuNTMuMjdsMTUuNTgtOC42NSwxLjA0LDEuODdaIiBmaWxsPSIjZmZmIj48L3BhdGg+PC9nPjwvc3ZnPiA=">
+    <div class="kicker" id="hKicker">Stella Maris Academy's 80th Anniversary Gala</div>
+    <h1 id="hTitle">Easter Ball</h1>
+    <div class="when" id="hDate">April 24th, 2027</div>
+    <div class="where" id="hVenue">Hilton La Jolla Torrey Pines</div>
+  </div>
+</header>
+<main id="app" aria-live="polite"><div class="spinner">Loading…</div></main>
+<footer id="foot"></footer>
+<div id="toast" role="status"></div>
+
+<script>
+'use strict';
+
+// ======================================================================
+// Transport: google.script.run inside Apps Script, the in-browser Demo
+// backend everywhere else (open this file directly to try it).
+// ======================================================================
+const IN_GAS = !!(window.google && google.script && google.script.run);
+
+function call(fn, ...args) {
+  return new Promise((resolve, reject) => {
+    if (IN_GAS) {
+      google.script.run
+        .withSuccessHandler(resolve)
+        .withFailureHandler(e => reject(new Error((e && e.message) || String(e))))[fn](...args);
+    } else {
+      setTimeout(() => {
+        try { resolve(JSON.parse(JSON.stringify(Demo[fn](...args)))); } catch (e) { reject(e); }
+      }, 200);
+    }
+  });
+}
+
+function urlParams() {
+  return new Promise(resolve => {
+    if (IN_GAS) google.script.url.getLocation(l => resolve(l.parameter || {}));
+    else resolve(Object.fromEntries(new URLSearchParams(location.search)));
+  });
+}
+
+// ======================================================================
+// State
+// ======================================================================
+const S = {
+  token: '',
+  data: null,         // server state: config, tables, occupied, invite, reservation, status
+  view: 'loading',    // find | sent | home | guests | seats | review | done | cancel
+  email: '',
+  demoToken: '',
+  draft: null,        // { guests: [{ name, meal, seatId }] }
+  active: 0,          // index of the guest being seated
+  openTable: null,
+  roomOnly: false,
+  busy: false,
+  error: '',
+};
+
+const $app = document.getElementById('app');
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const tableOf = seatId => S.data.tables.find(t => t.id === seatId.replace(/-\d+$/, ''));
+const seatNo = seatId => +seatId.split('-').pop();
+const seatLabel = seatId => { const t = tableOf(seatId); return t ? `${t.label}, seat ${seatNo(seatId)}` : seatId; };
+const partySize = () => (S.draft ? S.draft.guests.length : 0);
+
+function prettyDate(ymd, ordinal) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd || '');
+  if (!m) return esc(ymd || '');
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const d = +m[3];
+  const suf = ordinal ? (d % 10 === 1 && d !== 11 ? 'st' : d % 10 === 2 && d !== 12 ? 'nd' : d % 10 === 3 && d !== 13 ? 'rd' : 'th') : '';
+  return `${months[+m[2] - 1]} ${d}${suf}, ${m[1]}`;
+}
+
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3800);
+}
+
+function go(view) {
+  S.view = view;
+  S.error = '';
+  render();
+  if (view !== 'seats') window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ======================================================================
+// Boot
+// ======================================================================
+async function boot() {
+  if (!IN_GAS) document.getElementById('demoBar').hidden = false;
+  const p = await urlParams();
+  S.token = p.t || '';
+  try {
+    await refresh();
+  } catch (e) {
+    $app.innerHTML = `<div class="card narrow"><h2>Something went wrong</h2><p>${esc(e.message)}</p></div>`;
+    return;
+  }
+  if (S.token && !S.data.tokenValid) {
+    S.token = '';
+    S.error = 'That link is no longer valid. Please enter your email to get a new one.';
+    S.view = 'find';
+  } else {
+    S.view = S.token ? 'home' : 'find';
+  }
+  render();
+  setInterval(poll, 30000);
+}
+
+async function refresh() {
+  S.data = await call('getState', S.token);
+  const c = S.data.config;
+  document.getElementById('hKicker').textContent = c.eventName;
+  document.getElementById('hTitle').textContent = c.eventTitle;
+  document.getElementById('hDate').textContent = prettyDate(c.eventDate, true);
+  document.getElementById('hVenue').textContent = c.venue;
+  document.getElementById('foot').innerHTML = c.contactEmail
+    ? `Questions? <a href="mailto:${esc(c.contactEmail)}">${esc(c.contactEmail)}</a>` : '';
+}
+
+/** Keeps the map current while a guest is choosing, and frees any draft seat someone else just took. */
+async function poll() {
+  if (S.view !== 'seats' || S.busy || document.hidden) return;
+  try {
+    const fresh = await call('getState', S.token);
+    S.data = fresh;
+    const lost = S.draft.guests.filter(g => g.seatId && fresh.occupied[g.seatId] && !fresh.occupied[g.seatId].mine);
+    lost.forEach(g => { g.seatId = ''; });
+    if (lost.length) toast(`Another guest just took ${lost.length > 1 ? 'some seats' : 'a seat'} you picked. Please choose again.`);
+    render();
+  } catch (e) { /* try again next tick */ }
+}
+
+// ======================================================================
+// Views
+// ======================================================================
+function render() {
+  const v = VIEWS[S.view];
+  $app.innerHTML = v ? v() : '';
+  if (S.view === 'find') { const i = document.getElementById('email'); if (i && !S.email) i.focus(); }
+}
+
+const VIEWS = {
+  find() {
+    const demo = IN_GAS ? '' : `
+      <div class="notice"><b>Demo emails:</b> parent@example.com (2 seats) · vip@example.com (VIP ticket) ·
+      alumni@example.com (alumnus + guest) · donor@example.com (4 seats)</div>`;
+    return `<section class="card narrow stack">
+      <div><h2>Reserve your seats</h2>
+      <p class="muted">Enter the email address where you received the gala invitation.
+      ${S.data.config.requireEmailLink ? 'We will email you a personal link to choose your seats.' : ''}</p></div>
+      <form id="findForm" class="stack" novalidate>
+        <div><label for="email">Email address</label>
+        <input id="email" type="email" autocomplete="email" inputmode="email" required value="${esc(S.email)}"></div>
+        <div class="error" id="err">${esc(S.error)}</div>
+        <button class="btn btn-primary" type="submit" ${S.busy ? 'disabled' : ''}>${S.busy ? 'One moment…' : 'Continue'}</button>
+      </form>
+      ${demo}
+      <p class="fine">The gala is by invitation for current parents, alumni and donors of Stella Maris Academy.</p>
+    </section>`;
+  },
+
+  sent() {
+    const demo = IN_GAS ? '' : `<div class="notice">Demo: in the live site this link arrives by email.
+      <button class="btn-link" data-action="demo-open">Open the emailed link</button></div>`;
+    return `<section class="card narrow stack">
+      <h2>Check your email</h2>
+      <p>If <b>${esc(S.email)}</b> is on the guest list, we sent a personal link to choose your seats.
+      It can take a few minutes. Please check your spam folder too.</p>
+      ${demo}
+      <p class="fine">No email after 10 minutes? Try the other address your family uses with the school${
+        S.data.config.contactEmail ? `, or write to ${esc(S.data.config.contactEmail)}` : ''}.</p>
+      <button class="btn-link" data-action="to-find">Use a different email</button>
+    </section>`;
+  },
+
+  home() {
+    const d = S.data, c = d.config, inv = d.invite;
+    const chips = `<div class="row">
+      <span class="chip">${inv.seats} seat${inv.seats > 1 ? 's' : ''}</span>
+      ${inv.vip ? '<span class="chip vip">VIP ticket</span>' : ''}</div>`;
+    const lockNote = c.locked
+      ? `<div class="notice">Seating is now final. ${c.contactEmail ? `Please write to ${esc(c.contactEmail)} for changes.` : 'Please contact the school office for changes.'}</div>`
+      : c.lockDate ? `<p class="fine">You can change your seats or names until ${prettyDate(c.lockDate)}.</p>` : '';
+    let body;
+    if (d.status === 'Attending' && d.reservation.length) {
+      body = `<h3>You are attending</h3>${summaryTable(d.reservation)}${lockNote}
+        <div class="actions">
+          ${c.locked || !c.rsvpOpen ? '<span></span>' : '<button class="btn btn-primary" data-action="edit">Change seats or names</button>'}
+          <button class="btn btn-danger" data-action="to-cancel">I can no longer attend</button>
+        </div>`;
+    } else if (!c.rsvpOpen || c.locked) {
+      body = `<div class="notice">Reservations are closed.</div>`;
+    } else if (d.status === 'Not attending') {
+      body = `<p>You told us you cannot attend. If your plans change, you can still reserve seats while they remain.</p>
+        <div class="actions"><button class="btn btn-primary" data-action="edit">Reserve seats</button></div>`;
+    } else {
+      body = `<p>Will you join us for the ${esc(c.eventTitle)}?</p>
+        <div class="actions">
+          <button class="btn btn-primary" data-action="edit">Yes, choose our seats</button>
+          <button class="btn" data-action="decline">No, we cannot attend</button>
+        </div>`;
+    }
+    return `<section class="card narrow stack">
+      <div><p class="kicker muted" style="margin:0;font-size:13px;letter-spacing:.15em;text-transform:uppercase">Welcome</p>
+      <h2>${esc(inv.household)}</h2>${chips}</div>
+      ${body}
+    </section>`;
+  },
+
+  guests() {
+    const inv = S.data.invite, meals = S.data.config.meals, g = S.draft.guests;
+    const counts = Array.from({ length: inv.seats }, (_, i) => i + 1).map(n =>
+      `<button type="button" class="btn" data-action="count" data-n="${n}" aria-pressed="${n === g.length}">${n}</button>`).join('');
+    const rows = g.map((x, i) => `
+      <div class="guest-row">
+        <div><label for="n${i}">Guest ${i + 1} full name</label>
+          <input id="n${i}" type="text" maxlength="80" autocomplete="${i === 0 ? 'name' : 'off'}"
+            data-field="name" data-i="${i}" value="${esc(x.name)}" placeholder="As it should appear on the place card"></div>
+        <div><label for="m${i}">Meal</label>
+          <select id="m${i}" data-field="meal" data-i="${i}">
+            <option value="">Choose…</option>
+            ${meals.map(m => `<option ${m === x.meal ? 'selected' : ''}>${esc(m)}</option>`).join('')}
+          </select></div>
+      </div>`).join('');
+    return `<section class="card narrow">
+      <h2>Who is coming?</h2>
+      <p class="muted">Every seat needs the name of the person who will sit in it.</p>
+      <label>How many guests will attend?</label>
+      <div class="count-picker" style="margin-bottom:18px">${counts}</div>
+      ${rows}
+      <div class="error" id="err">${esc(S.error)}</div>
+      <div class="actions">
+        <button class="btn" data-action="to-home">Back</button>
+        <button class="btn btn-primary" data-action="to-seats">Choose seats</button>
+      </div>
+    </section>`;
+  },
+
+  seats() {
+    const g = S.draft.guests;
+    const allSet = g.every(x => x.seatId);
+    const party = g.map((x, i) => `<li><button type="button" data-action="activate" data-i="${i}" aria-pressed="${i === S.active}">
+        <span>${esc(x.name)}</span>
+        <span class="where ${x.seatId ? 'set' : ''}">${x.seatId ? esc(seatLabel(x.seatId)) : (i === S.active ? 'Choose a seat' : 'No seat yet')}</span>
+      </button></li>`).join('');
+    const prompt = allSet
+      ? 'Everyone has a seat. Tap a gold seat to free it.'
+      : `Choose a seat for <b>${esc(g[S.active].name)}</b>. Tap a table to see it up close.`;
+    return `<div class="picker">
+      <section class="card map-card">
+        <div class="map-tools">
+          <div class="legend">
+            <span><i style="background:var(--seat-open)"></i>Open</span>
+            <span><i style="background:var(--seat-taken);border-color:var(--seat-taken)"></i>Reserved</span>
+            <span><i style="background:var(--gold);border-color:var(--mine-ring)"></i>Your party</span>
+            ${S.data.invite.vip ? '' : '<span><i style="background:var(--seat-blocked);border-color:var(--seat-blocked)"></i>VIP only</span>'}
+          </div>
+          ${g.length > 1 ? `<label class="toggle"><input type="checkbox" data-action="room" ${S.roomOnly ? 'checked' : ''}>
+            Only tables with ${g.length} open seats together</label>` : ''}
+        </div>
+        ${mapSvg()}
+      </section>
+      <aside class="side stack">
+        <section class="card">
+          <h3>Your party</h3>
+          <p class="fine" style="margin-bottom:10px">${prompt}</p>
+          <ul class="party">${party}</ul>
+          <div class="actions" style="margin-top:6px">
+            <button class="btn" data-action="to-guests">Back</button>
+            <button class="btn btn-primary" data-action="to-review" ${allSet ? '' : 'disabled'}>Review</button>
+          </div>
+        </section>
+        ${S.openTable ? `<section class="card detail" id="detail">${tableDetail(S.openTable)}</section>` : ''}
+      </aside>
+    </div>`;
+  },
+
+  review() {
+    return `<section class="card narrow stack">
+      <h2>Review your reservation</h2>
+      ${summaryTable(S.draft.guests)}
+      <div class="error" id="err">${esc(S.error)}</div>
+      <div class="actions">
+        <button class="btn" data-action="to-seats">Back to seats</button>
+        <button class="btn btn-primary" data-action="save" ${S.busy ? 'disabled' : ''}>${S.busy ? 'Saving…' : 'Confirm reservation'}</button>
+      </div>
+    </section>`;
+  },
+
+  done() {
+    return `<section class="card narrow stack">
+      <h2>You are all set</h2>
+      <p>Thank you. We emailed a confirmation with a link to change your seats later.</p>
+      ${summaryTable(S.data.reservation)}
+      <div class="actions"><span></span><button class="btn btn-primary" data-action="to-home">Done</button></div>
+    </section>`;
+  },
+
+  cancel() {
+    const n = S.data.reservation.length;
+    return `<section class="card narrow stack">
+      <h2>Cannot attend?</h2>
+      <p>${n ? `This releases your ${n} seat${n > 1 ? 's' : ''} to other guests right away.` : 'We will record that your party cannot attend.'}
+      If your plans change, you can come back and reserve seats while they remain.</p>
+      <div class="error" id="err">${esc(S.error)}</div>
+      <div class="actions">
+        <button class="btn" data-action="to-home">Keep my reservation</button>
+        <button class="btn btn-danger" data-action="confirm-cancel" ${S.busy ? 'disabled' : ''}>${S.busy ? 'One moment…' : 'Yes, we cannot attend'}</button>
+      </div>
+    </section>`;
+  },
+};
+
+function summaryTable(list) {
+  return `<table class="summary"><thead><tr><th>Guest</th><th>Seat</th><th>Meal</th></tr></thead><tbody>${
+    list.map(g => `<tr><td>${esc(g.name)}</td><td>${esc(seatLabel(g.seatId))}</td><td>${esc(g.meal)}</td></tr>`).join('')
+  }</tbody></table>`;
+}
+
+// ======================================================================
+// Seat map
+// ======================================================================
+function seatState(seatId, t) {
+  const i = S.draft ? S.draft.guests.findIndex(g => g.seatId === seatId) : -1;
+  if (i >= 0) return { cls: 'mine', who: S.draft.guests[i].name };
+  const o = S.data.occupied[seatId];
+  if (o && !o.mine) return { cls: 'taken', who: o.name };
+  if (t.vip && !S.data.invite.vip) return { cls: 'blocked', who: '' };
+  return { cls: 'open', who: '' };
+}
+
+function openCount(t) {
+  let n = 0;
+  for (let s = 1; s <= t.seats; s++) if (seatState(`${t.id}-${s}`, t).cls === 'open') n++;
+  return n;
+}
+
+function seatPos(cx, cy, r, i, n) {
+  const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
+  return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+}
+
+function mapSvg() {
+  const T = S.data.tables;
+  const xs = T.map(t => t.x), ys = T.map(t => t.y);
+  const minX = Math.min(...xs) - 70, maxX = Math.max(...xs) + 70;
+  const stageY = Math.min(...ys) - 150;
+  const maxY = Math.max(...ys) + 100;
+  const cx = (minX + maxX) / 2;
+  const need = partySize();
+  const tables = T.map(t => {
+    const open = openCount(t);
+    const dim = (t.vip && !S.data.invite.vip) || (S.roomOnly && open < need);
+    const seats = Array.from({ length: t.seats }, (_, i) => {
+      const id = `${t.id}-${i + 1}`;
+      const st = seatState(id, t);
+      const [x, y] = seatPos(t.x, t.y, 50, i, t.seats);
+      const tip = `${t.label}, seat ${i + 1}: ${st.cls === 'taken' ? (st.who || 'Reserved') : st.cls === 'mine' ? st.who : st.cls === 'blocked' ? 'VIP only' : 'Open'}`;
+      return `<circle class="seat ${st.cls}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7" data-seat="${id}"><title>${esc(tip)}</title></circle>`;
+    }).join('');
+    const short = t.vip ? t.label : t.label.replace(/^Table\s+/i, '');
+    return `<g class="tbl ${t.vip ? 'vip' : ''} ${dim ? 'dim' : ''} ${S.openTable === t.id ? 'open-t' : ''}" data-table="${t.id}"
+        role="button" tabindex="0" aria-label="${esc(t.label)}, ${open} open seats">
+      <circle class="top" cx="${t.x}" cy="${t.y}" r="36"></circle>
+      <text class="lbl" x="${t.x}" y="${t.y - 2}" text-anchor="middle">${esc(short)}</text>
+      <text class="sub" x="${t.x}" y="${t.y + 14}" text-anchor="middle">${open} open</text>
+      ${seats}</g>`;
+  }).join('');
+  return `<svg class="map" viewBox="${minX} ${stageY - 10} ${maxX - minX} ${maxY - stageY + 10}" role="group" aria-label="Ballroom seating map">
+    <g class="stage"><rect x="${cx - 190}" y="${stageY}" width="380" height="46" rx="4"></rect>
+      <text x="${cx}" y="${stageY + 28}" text-anchor="middle">STAGE</text></g>
+    ${tables}
+    <text class="floor-note" x="${cx}" y="${maxY - 8}" text-anchor="middle">Placeholder layout. The final Hilton floor plan may differ.</text>
+  </svg>`;
+}
+
+function tableDetail(tableId) {
+  const t = S.data.tables.find(x => x.id === tableId);
+  const R = 100, C = 140;
+  const dots = [], who = [];
+  for (let i = 0; i < t.seats; i++) {
+    const id = `${t.id}-${i + 1}`;
+    const st = seatState(id, t);
+    const [x, y] = seatPos(C, C, R, i, t.seats);
+    const label = st.cls === 'taken' ? (st.who || 'Reserved') : st.cls === 'mine' ? st.who : st.cls === 'blocked' ? 'VIP only' : 'Open';
+    dots.push(`<g><circle class="seat ${st.cls}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="17" data-seat="${id}"
+        role="button" tabindex="0" aria-label="Seat ${i + 1}, ${esc(label)}"><title>${esc(label)}</title></circle>
+      <text class="seat-num ${st.cls === 'taken' ? 'on-dark' : ''}" x="${x.toFixed(1)}" y="${y.toFixed(1)}">${i + 1}</text></g>`);
+    if (st.cls === 'taken' || st.cls === 'mine') {
+      who.push(`<li><b>${i + 1}</b><span>${esc(st.who || 'Reserved')}${st.cls === 'mine' ? ' (your party)' : ''}</span></li>`);
+    }
+  }
+  const open = openCount(t);
+  return `<div class="row" style="justify-content:space-between"><h3 style="margin:0">${esc(t.label)}</h3>
+      <button class="btn-link" data-action="close-table" aria-label="Close table view">Close</button></div>
+    <p class="fine">${t.vip ? 'VIP table in front of the stage. ' : ''}${open} of ${t.seats} seats open. Tap an open seat.</p>
+    <svg viewBox="0 0 280 280" class="map" aria-label="${esc(t.label)} seats">
+      <circle cx="${C}" cy="${C}" r="62" fill="var(--table)" stroke="${t.vip ? 'var(--gold)' : 'var(--line)'}" stroke-width="2"></circle>
+      <text x="${C}" y="${C + 6}" text-anchor="middle" style="font:600 18px Jost;fill:var(--ink)">${esc(t.label)}</text>
+      ${dots.join('')}
+    </svg>
+    ${who.length ? `<ul class="who">${who.join('')}</ul>` : '<p class="fine" style="text-align:center">No one has reserved here yet.</p>'}`;
+}
+
+function pickSeat(seatId) {
+  const t = tableOf(seatId);
+  const st = seatState(seatId, t);
+  const g = S.draft.guests;
+  if (st.cls === 'blocked') return toast('VIP tables are reserved for VIP ticket holders.');
+  if (st.cls === 'taken') return toast(st.who ? `Seat ${seatNo(seatId)} is reserved by ${st.who}.` : 'That seat is reserved.');
+  if (st.cls === 'mine') {
+    const i = g.findIndex(x => x.seatId === seatId);
+    g[i].seatId = '';
+    S.active = i;
+    return render();
+  }
+  let i = S.active;
+  if (g[i].seatId && g.some(x => !x.seatId)) i = g.findIndex(x => !x.seatId);
+  g[i].seatId = seatId;
+  const next = g.findIndex(x => !x.seatId);
+  S.active = next >= 0 ? next : i;
+  render();
+}
+
+// ======================================================================
+// Events
+// ======================================================================
+$app.addEventListener('submit', async e => {
+  if (e.target.id !== 'findForm') return;
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  S.email = email;
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { S.error = 'Please enter a valid email address.'; return render(); }
+  S.busy = true; S.error = ''; render();
+  try {
+    const r = await call('requestLink', email);
+    S.busy = false;
+    if (!r.ok) { S.error = r.message; return render(); }
+    if (r.token) { S.token = r.token; await refresh(); return go('home'); }
+    S.demoToken = r.demoToken || '';
+    go('sent');
+  } catch (err) { S.busy = false; S.error = err.message; render(); }
+});
+
+$app.addEventListener('input', e => {
+  const f = e.target.dataset.field;
+  if (f && S.draft) S.draft.guests[+e.target.dataset.i][f] = e.target.value;
+});
+$app.addEventListener('change', e => {
+  const f = e.target.dataset.field;
+  if (f && S.draft) S.draft.guests[+e.target.dataset.i][f] = e.target.value;
+  if (e.target.dataset.action === 'room') { S.roomOnly = e.target.checked; render(); }
+});
+
+$app.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && (e.target.dataset.seat || e.target.dataset.table)) {
+    e.preventDefault();
+    e.target.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  }
+});
+
+$app.addEventListener('click', async e => {
+  const seat = e.target.closest('[data-seat]');
+  if (seat && S.view === 'seats') {
+    S.openTable = seat.dataset.seat.replace(/-\d+$/, '');
+    return pickSeat(seat.dataset.seat);
+  }
+  const tbl = e.target.closest('[data-table]');
+  if (tbl && S.view === 'seats') {
+    S.openTable = tbl.dataset.table;
+    render();
+    if (window.innerWidth <= 900) document.getElementById('detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const a = btn.dataset.action;
+  if (ACTIONS[a]) ACTIONS[a](btn);
+});
+
+document.getElementById('demoBar').addEventListener('click', e => {
+  if (e.target.dataset.action === 'demo-reset') { Demo.reset(); location.search = ''; location.reload(); }
+});
+
+const ACTIONS = {
+  'to-find'() { S.token = ''; go('find'); },
+  'to-home'() { S.draft = null; go('home'); },
+  'to-cancel'() { go('cancel'); },
+  'to-guests'() { go('guests'); },
+  async 'demo-open'() { S.token = S.demoToken; await refresh(); go('home'); },
+
+  edit() {
+    const d = S.data, meals = d.config.meals;
+    const base = d.reservation.length
+      ? d.reservation.map(g => ({ ...g }))
+      : Array.from({ length: d.invite.seats }, () => ({ name: '', meal: '', seatId: '' }));
+    if (meals.length === 1) base.forEach(g => { g.meal = g.meal || meals[0]; });
+    S.draft = { guests: base };
+    S.active = 0;
+    S.openTable = null;
+    go('guests');
+  },
+  count(btn) {
+    const n = +btn.dataset.n, g = S.draft.guests;
+    while (g.length < n) g.push({ name: '', meal: S.data.config.meals.length === 1 ? S.data.config.meals[0] : '', seatId: '' });
+    g.length = n;
+    render();
+  },
+  'to-seats'() {
+    const g = S.draft.guests, meals = S.data.config.meals;
+    g.forEach(x => { x.name = x.name.replace(/\s+/g, ' ').trim(); });
+    if (g.some(x => !x.name)) { S.error = 'Please enter a name for every guest.'; return render(); }
+    if (meals.length && g.some(x => !meals.includes(x.meal))) { S.error = 'Please choose a meal for every guest.'; return render(); }
+    S.active = Math.max(0, g.findIndex(x => !x.seatId));
+    if (!S.openTable) {
+      const first = g.find(x => x.seatId);
+      if (first) S.openTable = tableOf(first.seatId).id;
+    }
+    go('seats');
+    poll();
+  },
+  activate(btn) { S.active = +btn.dataset.i; const s = S.draft.guests[S.active].seatId; if (s) S.openTable = tableOf(s).id; render(); },
+  'close-table'() { S.openTable = null; render(); },
+  'to-review'() { go('review'); },
+
+  async save() {
+    S.busy = true; render();
+    try {
+      const r = await call('saveReservation', S.token, S.draft.guests);
+      S.busy = false;
+      if (r.ok) { S.data = r.state; S.draft = null; return go('done'); }
+      if (r.code === 'SEAT_TAKEN') {
+        S.data = r.state;
+        S.draft.guests.forEach(g => { if (r.seats.includes(g.seatId)) g.seatId = ''; });
+        S.active = Math.max(0, S.draft.guests.findIndex(g => !g.seatId));
+        toast(r.message);
+        return go('seats');
+      }
+      S.error = r.message; render();
+    } catch (err) { S.busy = false; S.error = err.message; render(); }
+  },
+
+  async decline() { go('cancel'); },
+  async 'confirm-cancel'() {
+    S.busy = true; render();
+    try {
+      const r = await call('cancelReservation', S.token);
+      S.busy = false;
+      if (!r.ok) { S.error = r.message; return render(); }
+      S.data = r.state; S.draft = null;
+      toast('Thank you for letting us know.');
+      go('home');
+    } catch (err) { S.busy = false; S.error = err.message; render(); }
+  },
+};
+
+// ======================================================================
+// Demo backend: mirrors the rules in Code.gs with sample data in this
+// browser only. Never used inside Apps Script.
+// ======================================================================
+const Demo = (() => {
+  const KEY = 'smaGalaDemo.v1';
+  const config = {
+    eventName: "Stella Maris Academy's 80th Anniversary Gala", eventTitle: 'Easter Ball',
+    eventDate: '2027-04-24', venue: 'Hilton La Jolla Torrey Pines', rsvpOpen: true,
+    lockDate: '2027-04-10', locked: false, showNames: true,
+    meals: ['Meal option A (TBD)', 'Meal option B (TBD)', 'Vegetarian (TBD)'],
+    requireEmailLink: true, contactEmail: 'gala@example.org', appUrl: '',
+  };
+  const invites = [
+    { id: 'INV-0001', token: 'a1', household: 'The Garcia Family', emails: ['parent@example.com'], type: 'Parent', seats: 2, vip: false },
+    { id: 'INV-0002', token: 'b2', household: 'The Nguyen Family', emails: ['vip@example.com'], type: 'Parent', seats: 2, vip: true },
+    { id: 'INV-0003', token: 'c3', household: 'Michael Reyes (Class of 1994)', emails: ['alumni@example.com'], type: 'Alumni', seats: 2, vip: false },
+    { id: 'INV-0004', token: 'd4', household: 'The Lee Family Foundation', emails: ['donor@example.com'], type: 'Donor', seats: 4, vip: false },
+  ];
+  const tables = (() => {
+    const out = [{ id: 'T1', label: 'VIP 1', vip: true, x: 400, y: 200, seats: 14 }, { id: 'T2', label: 'VIP 2', vip: true, x: 600, y: 200, seats: 14 }];
+    let n = 3;
+    [350, 490, 630, 770].forEach(y => { for (let c = 0; c < 7; c++) { out.push({ id: 'T' + n, label: 'Table ' + n, vip: false, x: 100 + c * 133, y, seats: 14 }); n++; } });
+    return out;
+  })();
+
+  function seed() {
+    let s = 7;
+    const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+    const first = ['Maria', 'James', 'Sofia', 'Daniel', 'Grace', 'Patrick', 'Elena', 'Thomas', 'Claire', 'Matthew', 'Lucia', 'Andrew', 'Teresa', 'John', 'Anna', 'Joseph', 'Rose', 'Peter', 'Catherine', 'Luke'];
+    const last = ['Lopez', 'Murphy', 'Chen', 'Russo', 'Kim', 'Okafor', 'Silva', 'Walsh', 'Patel', 'Novak', 'Duarte', 'Brennan', 'Ito', 'Moreno', 'Kelly', 'Haddad'];
+    const seats = {};
+    let fam = 0;
+    tables.forEach(t => {
+      const fill = t.vip ? 0.45 : 0.15 + rnd() * 0.7;
+      for (let i = 1; i < t.seats; i += 2) {
+        if (rnd() < fill) {
+          const ln = last[Math.floor(rnd() * last.length)];
+          const inv = 'SEED-' + (++fam);
+          seats[`${t.id}-${i}`] = { inv, name: `${first[Math.floor(rnd() * first.length)]} ${ln}`, meal: config.meals[0] };
+          seats[`${t.id}-${i + 1}`] = { inv, name: `${first[Math.floor(rnd() * first.length)]} ${ln}`, meal: config.meals[1] };
+        }
+      }
+    });
+    return { seats, rsvp: {} };
+  }
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || seed(); } catch (e) { return seed(); } };
+  const store = db => { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) { /* private mode */ } };
+  let db = load();
+  const byToken = t => invites.find(i => i.token === t) || null;
+
+  function getState(token) {
+    const inv = token ? byToken(token) : null;
+    const occupied = {};
+    Object.entries(db.seats).forEach(([id, r]) => {
+      const mine = !!inv && r.inv === inv.id;
+      occupied[id] = { mine, name: mine || (inv && config.showNames) ? r.name : '' };
+    });
+    const reservation = inv ? Object.entries(db.seats).filter(([, r]) => r.inv === inv.id).map(([seatId, r]) => ({ name: r.name, meal: r.meal, seatId })) : [];
+    return {
+      config, tables, occupied, reservation,
+      invite: inv && { household: inv.household, seats: inv.seats, vip: inv.vip, type: inv.type },
+      status: inv ? db.rsvp[inv.id] || '' : '', tokenValid: !token || !!inv,
+    };
+  }
+  function requestLink(email) {
+    const inv = invites.find(i => i.emails.includes(email.trim().toLowerCase()));
+    return { ok: true, sent: true, demoToken: inv ? inv.token : '' };
+  }
+  function saveReservation(token, guests) {
+    const inv = byToken(token);
+    if (!inv) return { ok: false, message: 'This link is no longer valid.' };
+    if (guests.length > inv.seats) return { ok: false, message: `Your invitation includes ${inv.seats} seats.` };
+    const ids = guests.map(g => g.seatId);
+    if (new Set(ids).size !== ids.length) return { ok: false, message: 'Two guests cannot share one seat.' };
+    for (const g of guests) {
+      const t = tables.find(x => x.id === g.seatId.replace(/-\d+$/, ''));
+      if (!g.name.trim()) return { ok: false, message: 'Every seat needs a guest name.' };
+      if (!t) return { ok: false, message: `Choose a seat for ${g.name}.` };
+      if (t.vip && !inv.vip) return { ok: false, message: `${t.label} is reserved for VIP ticket holders.` };
+    }
+    const taken = ids.filter(id => db.seats[id] && db.seats[id].inv !== inv.id);
+    if (taken.length) return { ok: false, code: 'SEAT_TAKEN', seats: taken, message: 'Another guest just reserved one of your seats. Please choose again.', state: getState(token) };
+    Object.keys(db.seats).forEach(id => { if (db.seats[id].inv === inv.id) delete db.seats[id]; });
+    guests.forEach(g => { db.seats[g.seatId] = { inv: inv.id, name: g.name.trim(), meal: g.meal }; });
+    db.rsvp[inv.id] = 'Attending';
+    store(db);
+    return { ok: true, state: getState(token) };
+  }
+  function cancelReservation(token) {
+    const inv = byToken(token);
+    Object.keys(db.seats).forEach(id => { if (db.seats[id].inv === inv.id) delete db.seats[id]; });
+    db.rsvp[inv.id] = 'Not attending';
+    store(db);
+    return { ok: true, state: getState(token) };
+  }
+  function reset() { try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ } db = seed(); }
+  return { getState, requestLink, saveReservation, cancelReservation, reset };
+})();
+
+boot();
+</script>
+</body>
+</html>

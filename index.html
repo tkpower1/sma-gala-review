@@ -368,29 +368,49 @@ function render() {
   if (S.view === 'find') { const i = document.getElementById('email'); if (i && !S.email) i.focus(); }
 }
 
+// Review copy only: the guest types a reviewer can try, so nobody has to remember sample emails.
+const DEMO_CASES = [
+  { email: 'parent@example.com', label: 'Parent household (2 seats)', hint: 'The usual case: two parents, two seats.' },
+  { email: 'vip@example.com', label: 'VIP ticket holder (2 seats)', hint: 'Can also sit at the two VIP tables in front of the stage.' },
+  { email: 'alumni@example.com', label: 'Alumnus + guest (2 seats)', hint: 'An alumni invitation with one guest.' },
+  { email: 'donor@example.com', label: 'Donor (4 seats)', hint: 'A larger party. Try the "tables with 4 open seats" filter.' },
+  { email: 'stranger@example.com', label: 'Not on the guest list', hint: 'Gets the same reply as everyone, so the form cannot reveal who is invited. No link is sent.' },
+];
+
 const VIEWS = {
   find() {
+    const cur = DEMO_CASES.find(c => c.email === S.email);
     const demo = IN_GAS ? '' : `
-      <div class="notice"><b>Demo emails:</b> parent@example.com (2 seats) · vip@example.com (VIP ticket) ·
-      alumni@example.com (alumnus + guest) · donor@example.com (4 seats)</div>`;
+      <div class="notice">
+        <label for="demoCase" style="margin-bottom:6px">Demo: choose a guest to try</label>
+        <select id="demoCase">
+          <option value="">Choose a guest type…</option>
+          ${DEMO_CASES.map(c => `<option value="${c.email}" ${cur === c ? 'selected' : ''}>${esc(c.label)}</option>`).join('')}
+        </select>
+        <p class="fine" id="demoHint" style="margin:6px 0 0">${cur ? esc(cur.hint) + ' Then tap Continue.' : 'This fills in a sample email below. Then tap Continue.'}</p>
+      </div>`;
     return `<section class="card narrow stack">
       <div><h2>Reserve your seats</h2>
       <p class="muted">Enter the email address where you received the gala invitation.
       ${S.data.config.requireEmailLink ? 'We will email you a personal link to choose your seats.' : ''}</p></div>
+      ${demo}
       <form id="findForm" class="stack" novalidate>
         <div><label for="email">Email address</label>
         <input id="email" type="email" autocomplete="email" inputmode="email" required value="${esc(S.email)}"></div>
         <div class="error" id="err">${esc(S.error)}</div>
         <button class="btn btn-primary" type="submit" ${S.busy ? 'disabled' : ''}>${S.busy ? 'One moment…' : 'Continue'}</button>
       </form>
-      ${demo}
       <p class="fine">The gala is by invitation for current parents, alumni and donors of Stella Maris Academy.</p>
     </section>`;
   },
 
   sent() {
-    const demo = IN_GAS ? '' : `<div class="notice">Demo: in the live site this link arrives by email.
-      <button class="btn-link" data-action="demo-open">Open the emailed link</button></div>`;
+    const demo = IN_GAS ? '' : S.demoToken
+      ? `<div class="notice">Demo: in the live site this link arrives by email.
+      <button class="btn-link" data-action="demo-open">Open the emailed link</button></div>`
+      : `<div class="notice">Demo: this email is not on the guest list, so no link is sent. The page says the same thing
+      either way, so nobody can use it to check who is invited.
+      <button class="btn-link" data-action="to-find">Try another guest</button></div>`;
     return `<section class="card narrow stack">
       <h2>Check your email</h2>
       <p>If <b>${esc(S.email)}</b> is on the guest list, we sent a personal link to choose your seats.
@@ -725,6 +745,13 @@ $app.addEventListener('input', e => {
   if (f && S.draft) { S.draft.guests[+e.target.dataset.i][f] = e.target.value; updateGuestGate(); }
 });
 $app.addEventListener('change', e => {
+  if (e.target.id === 'demoCase') {
+    const c = DEMO_CASES.find(x => x.email === e.target.value);
+    S.email = c ? c.email : '';
+    document.getElementById('email').value = S.email;
+    document.getElementById('demoHint').textContent = c ? c.hint + ' Then tap Continue.' : 'This fills in a sample email below. Then tap Continue.';
+    return;
+  }
   const f = e.target.dataset.field;
   if (f && S.draft) { S.draft.guests[+e.target.dataset.i][f] = e.target.value; updateGuestGate(); }
   if (e.target.dataset.action === 'room') { S.roomOnly = e.target.checked; render(); }

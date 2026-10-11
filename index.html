@@ -115,6 +115,11 @@
   .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
   .btn-link { background: none; border: 0; padding: 6px 0; color: var(--muted); text-decoration: underline; cursor: pointer; min-height: 0; }
   .btn-danger { color: var(--danger); border-color: var(--danger); }
+  a.btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; font-size: 15px; }
+  .step { border: 1px solid var(--gold); border-radius: 8px; padding: 16px; background: var(--bg); }
+  .step h3 { margin: 0 0 6px; }
+  .step .btn { margin-top: 12px; width: 100%; }
+  .done-mark { color: var(--ink); font-weight: 500; }
   .actions { display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap; margin-top: 20px; }
   .chip {
     display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px;
@@ -123,6 +128,9 @@
   .chip.vip { background: var(--navy); color: var(--gold-soft); border-color: var(--gold); }
   .notice { border-left: 3px solid var(--gold); background: var(--bg); padding: 10px 14px; border-radius: 4px; font-size: 14px; }
   .error { color: var(--danger); font-size: 14px; min-height: 1.2em; }
+  .req { color: var(--danger); }
+  .gate-hint { font-size: 13px; color: var(--muted); margin: 14px 0 0; }
+  .gate-hint[hidden] { display: none; }
 
   table.summary { width: 100%; border-collapse: collapse; font-size: 15px; }
   table.summary th { text-align: left; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 6px 8px 6px 0; border-bottom: 1px solid var(--line); }
@@ -401,14 +409,16 @@ const VIEWS = {
       ${inv.vip ? '<span class="chip vip">VIP ticket</span>' : ''}</div>`;
     const lockNote = c.locked
       ? `<div class="notice">Seating is now final. ${c.contactEmail ? `Please write to ${esc(c.contactEmail)} for changes.` : 'Please contact the school office for changes.'}</div>`
-      : c.lockDate ? `<p class="fine">You can change your seats or names until ${prettyDate(c.lockDate)}.</p>` : '';
+      : `<p class="fine">${changeDates(c)}</p>`;
+    const editLabel = c.mealsLocked || !c.meals.length ? 'Change seats or names' : 'Change seats, names or meals';
     let body;
     if (d.status === 'Attending' && d.reservation.length) {
       body = `<h3>You are attending</h3>${summaryTable(d.reservation)}${lockNote}
         <div class="actions">
-          ${c.locked || !c.rsvpOpen ? '<span></span>' : '<button class="btn btn-primary" data-action="edit">Change seats or names</button>'}
+          ${c.locked || !c.rsvpOpen ? '<span></span>' : `<button class="btn btn-primary" data-action="edit">${editLabel}</button>`}
           <button class="btn btn-danger" data-action="to-cancel">I can no longer attend</button>
-        </div>`;
+        </div>
+        ${auctionStep()}`;
     } else if (!c.rsvpOpen || c.locked) {
       body = `<div class="notice">Reservations are closed.</div>`;
     } else if (d.status === 'Not attending') {
@@ -429,30 +439,34 @@ const VIEWS = {
   },
 
   guests() {
-    const inv = S.data.invite, meals = S.data.config.meals, g = S.draft.guests;
+    const inv = S.data.invite, c = S.data.config, meals = c.meals, g = S.draft.guests;
     const counts = Array.from({ length: inv.seats }, (_, i) => i + 1).map(n =>
       `<button type="button" class="btn" data-action="count" data-n="${n}" aria-pressed="${n === g.length}">${n}</button>`).join('');
     const rows = g.map((x, i) => `
       <div class="guest-row">
-        <div><label for="n${i}">Guest ${i + 1} full name</label>
-          <input id="n${i}" type="text" maxlength="80" autocomplete="${i === 0 ? 'name' : 'off'}"
+        <div><label for="n${i}">Guest ${i + 1} full name <span class="req" aria-hidden="true">*</span></label>
+          <input id="n${i}" type="text" maxlength="80" autocomplete="${i === 0 ? 'name' : 'off'}" required aria-required="true"
             data-field="name" data-i="${i}" value="${esc(x.name)}" placeholder="As it should appear on the place card"></div>
-        <div><label for="m${i}">Meal</label>
-          <select id="m${i}" data-field="meal" data-i="${i}">
+        ${meals.length ? `<div><label for="m${i}">Meal <span class="req" aria-hidden="true">*</span></label>
+          <select id="m${i}" data-field="meal" data-i="${i}" required aria-required="true" ${x.mealFixed ? 'disabled aria-describedby="mealClosed"' : ''}>
             <option value="">Choose…</option>
             ${meals.map(m => `<option ${m === x.meal ? 'selected' : ''}>${esc(m)}</option>`).join('')}
-          </select></div>
+          </select></div>` : ''}
       </div>`).join('');
+    const ready = guestsComplete();
     return `<section class="card narrow">
       <h2>Who is coming?</h2>
-      <p class="muted">Every seat needs the name of the person who will sit in it.</p>
+      <p class="muted">Every seat needs the name of the person who will sit in it${meals.length ? ' and their meal choice' : ''}.
+        <span class="req" aria-hidden="true">*</span> Required.</p>
+      ${c.mealsLocked && g.some(x => x.mealFixed) ? `<div class="notice" id="mealClosed" style="margin-bottom:14px">Meal choices closed on ${prettyDate(c.mealDeadline)}. You can still change names and seats. A guest you add now chooses a meal.</div>` : ''}
       <label>How many guests will attend?</label>
       <div class="count-picker" style="margin-bottom:18px">${counts}</div>
       ${rows}
+      <p class="gate-hint" id="gateHint" ${ready ? 'hidden' : ''}>${meals.length ? 'Enter a name and choose a meal for every guest to continue.' : 'Enter a name for every guest to continue.'}</p>
       <div class="error" id="err">${esc(S.error)}</div>
       <div class="actions">
         <button class="btn" data-action="to-home">Back</button>
-        <button class="btn btn-primary" data-action="to-seats">Choose seats</button>
+        <button class="btn btn-primary" data-action="to-seats" id="toSeats" ${ready ? '' : 'disabled'}>Choose seats</button>
       </div>
     </section>`;
   },
@@ -487,12 +501,15 @@ const VIEWS = {
           <h3>Your party</h3>
           <p class="fine" style="margin-bottom:10px">${prompt}</p>
           <ul class="party">${party}</ul>
+        </section>
+        ${S.openTable ? `<section class="card detail" id="detail">${tableDetail(S.openTable)}</section>` : ''}
+        <section class="card">
+          <p class="gate-hint" style="margin:0 0 4px" ${allSet ? 'hidden' : ''}>Choose a seat for every guest to continue.</p>
           <div class="actions" style="margin-top:6px">
             <button class="btn" data-action="to-guests">Back</button>
             <button class="btn btn-primary" data-action="to-review" ${allSet ? '' : 'disabled'}>Review</button>
           </div>
         </section>
-        ${S.openTable ? `<section class="card detail" id="detail">${tableDetail(S.openTable)}</section>` : ''}
       </aside>
     </div>`;
   },
@@ -510,11 +527,14 @@ const VIEWS = {
   },
 
   done() {
+    const c = S.data.config;
     return `<section class="card narrow stack">
-      <h2>You are all set</h2>
-      <p>Thank you. We emailed a confirmation with a link to change your seats later.</p>
+      <h2>Your seats are confirmed</h2>
+      <p>Thank you. We emailed a confirmation with a link to change your reservation later.</p>
       ${summaryTable(S.data.reservation)}
-      <div class="actions"><span></span><button class="btn btn-primary" data-action="to-home">Done</button></div>
+      <p class="fine">${changeDates(c)}</p>
+      ${auctionStep()}
+      <div class="actions"><span></span><button class="btn ${c.auctionUrl ? '' : 'btn-primary'}" data-action="to-home">Done</button></div>
     </section>`;
   },
 
@@ -532,6 +552,27 @@ const VIEWS = {
     </section>`;
   },
 };
+
+/** "You can change meal choices until ..., and seats and names until ...", matching the email. */
+function changeDates(c) {
+  const out = [];
+  if (c.mealDeadline && c.meals.length) out.push(c.mealsLocked ? `Meal choices closed on ${prettyDate(c.mealDeadline)}.` : `You can change meal choices until ${prettyDate(c.mealDeadline)}.`);
+  if (c.lockDate) out.push(`You can change seats and names until ${prettyDate(c.lockDate)}.`);
+  return out.join(' ');
+}
+
+/** The auction registration step (GalaBid, Givi...). Hidden while AuctionUrl is blank. */
+function auctionStep() {
+  const c = S.data.config;
+  if (!c.auctionUrl) return '';
+  return `<div class="step">
+      <h3>Next step: register for the auction</h3>
+      <p class="fine" style="margin:0">The gala auction runs on ${esc(c.auctionName)}. Please register before the event so you can bid on the night.
+      Registration opens in a new tab.</p>
+      ${S.data.auctionOpened ? '<p class="fine done-mark" style="margin:8px 0 0">You opened the registration link. If you did not finish, tap it again.</p>' : ''}
+      <a class="btn btn-primary" href="${esc(c.auctionUrl)}" target="_blank" rel="noopener" data-auction>Register for the auction</a>
+    </div>`;
+}
 
 function summaryTable(list) {
   return `<table class="summary"><thead><tr><th>Guest</th><th>Seat</th><th>Meal</th></tr></thead><tbody>${
@@ -664,13 +705,28 @@ $app.addEventListener('submit', async e => {
   } catch (err) { S.busy = false; S.error = err.message; render(); }
 });
 
+// True when every guest has a name and (if the event offers meals) a listed meal choice.
+function guestsComplete() {
+  const meals = S.data.config.meals;
+  return S.draft.guests.every(x => x.name.trim() && (!meals.length || meals.includes(x.meal)));
+}
+
+// Enables "Choose seats" as fields are filled, without a re-render that would steal focus.
+function updateGuestGate() {
+  const btn = document.getElementById('toSeats');
+  if (!btn) return;
+  const ready = guestsComplete();
+  btn.disabled = !ready;
+  document.getElementById('gateHint').hidden = ready;
+}
+
 $app.addEventListener('input', e => {
   const f = e.target.dataset.field;
-  if (f && S.draft) S.draft.guests[+e.target.dataset.i][f] = e.target.value;
+  if (f && S.draft) { S.draft.guests[+e.target.dataset.i][f] = e.target.value; updateGuestGate(); }
 });
 $app.addEventListener('change', e => {
   const f = e.target.dataset.field;
-  if (f && S.draft) S.draft.guests[+e.target.dataset.i][f] = e.target.value;
+  if (f && S.draft) { S.draft.guests[+e.target.dataset.i][f] = e.target.value; updateGuestGate(); }
   if (e.target.dataset.action === 'room') { S.roomOnly = e.target.checked; render(); }
 });
 
@@ -682,6 +738,11 @@ $app.addEventListener('keydown', e => {
 });
 
 $app.addEventListener('click', async e => {
+  if (e.target.closest('[data-auction]')) {
+    S.data.auctionOpened = true;
+    call('recordAuctionClick', S.token).catch(() => {});
+    return;
+  }
   let seat = e.target.closest('[data-seat]');
   // On touch screens the room-map seat dots are too small to aim at, so a tap there opens the
   // table instead of booking a seat. Seats are booked only in the large table view.
@@ -717,7 +778,7 @@ const ACTIONS = {
   edit() {
     const d = S.data, meals = d.config.meals;
     const base = d.reservation.length
-      ? d.reservation.map(g => ({ ...g }))
+      ? d.reservation.map(g => ({ ...g, mealFixed: !!d.config.mealsLocked }))
       : Array.from({ length: d.invite.seats }, () => ({ name: '', meal: '', seatId: '' }));
     if (meals.length === 1) base.forEach(g => { g.meal = g.meal || meals[0]; });
     S.draft = { guests: base };
@@ -789,6 +850,8 @@ const Demo = (() => {
     eventName: "Stella Maris Academy's 80th Anniversary Gala", eventTitle: 'Easter Ball',
     eventDate: '2027-04-24', venue: 'Hilton La Jolla Torrey Pines', rsvpOpen: true,
     lockDate: '2027-04-10', locked: false, showNames: true,
+    mealDeadline: '2027-03-24', mealsLocked: false,
+    auctionName: 'GalaBid or Givi (to be chosen)', auctionUrl: 'https://example.org/gala-auction-demo',
     meals: ['Meal option A (TBD)', 'Meal option B (TBD)', 'Vegetarian (TBD)'],
     requireEmailLink: true, contactEmail: 'gala@example.org', appUrl: '',
   };
@@ -842,6 +905,7 @@ const Demo = (() => {
       config, tables, occupied, reservation,
       invite: inv && { household: inv.household, seats: inv.seats, vip: inv.vip, type: inv.type },
       status: inv ? db.rsvp[inv.id] || '' : '', tokenValid: !token || !!inv,
+      auctionOpened: !!inv && !!(db.auction || {})[inv.id],
     };
   }
   function requestLink(email) {
@@ -857,6 +921,7 @@ const Demo = (() => {
     for (const g of guests) {
       const t = tables.find(x => x.id === g.seatId.replace(/-\d+$/, ''));
       if (!g.name.trim()) return { ok: false, message: 'Every seat needs a guest name.' };
+      if (!config.meals.includes(g.meal)) return { ok: false, message: `Choose a meal for ${g.name}.` };
       if (!t) return { ok: false, message: `Choose a seat for ${g.name}.` };
       if (t.vip && !inv.vip) return { ok: false, message: `${t.label} is reserved for VIP ticket holders.` };
     }
@@ -875,8 +940,16 @@ const Demo = (() => {
     store(db);
     return { ok: true, state: getState(token) };
   }
+  function recordAuctionClick(token) {
+    const inv = byToken(token);
+    if (!inv) return { ok: false, message: 'This link is no longer valid.' };
+    db.auction = db.auction || {};
+    db.auction[inv.id] = db.auction[inv.id] || new Date().toISOString();
+    store(db);
+    return { ok: true };
+  }
   function reset() { try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ } db = seed(); }
-  return { getState, requestLink, saveReservation, cancelReservation, reset };
+  return { getState, requestLink, saveReservation, cancelReservation, recordAuctionClick, reset };
 })();
 
 boot();
